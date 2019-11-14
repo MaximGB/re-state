@@ -7,7 +7,7 @@ Re-frame supplimentary library which routes dispatched events via statecharts im
 
 == TL;DR
 
-Re-state routes re-frame events via state chart interpreter, currently backed by [XState](https://xstate.js.org) library,
+Re-state routes re-frame events via state chart interpreter, currently backed by https://xstate.js.org[XState] library,
 thus allowing more fine grained event handling. A re-frame component might use a statechart interpreter to dispatch to and
 handle events related only to the component. The library also implements facilities to isolate component state within re-frame
 application database, thus making it possible to write real independent standalone components.
