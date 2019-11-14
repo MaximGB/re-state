@@ -7,6 +7,8 @@ PACKAGE_LOCK = ./package-lock.json
 WEBPACK_SRC = ./src/js/webpack.*
 XSTATE_BUNDLE_DEV = ./target/public/js-out/xstate_bundle.js
 XSTATE_BUNDLE_PROD = ./target/public/js-out/xstate_bundle.min.js
+EXTERNS_SRC = ./src/js/externs.js
+EXTERNS_BUNDLE = ./target/public/js-out/externs.js
 JAR = ./target/maximgb.re-state.jar
 
 .PHONY: clean, deploy, xstate_bundle
@@ -31,7 +33,11 @@ $(XSTATE_BUNDLE_PROD): $(PACKAGE_LOCK) $(WEBPACK_SRC)
 	npx webpack --env=production --config=./src/js/webpack.config.js
 
 
-xstate_bundle: $(XSTATE_BUNDLE_DEV) $(XSTATE_BUNDLE_PROD)
+$(EXTERNS_BUNDLE): $(EXTERNS_SRC)
+	cp -u $(EXTERNS_SRC) $(EXTERNS_BUNDLE)
+
+
+xstate_bundle: $(XSTATE_BUNDLE_DEV) $(XSTATE_BUNDLE_PROD) $(EXTERNS_BUNDLE)
 
 
 $(JAR): $(DEPS_EDN) xstate_bundle
