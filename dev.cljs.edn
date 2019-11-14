@@ -1,0 +1,10 @@
+^{:watch-dirs ["src" "test"]
+  :css-dirs ["resources/public"]
+  :auto-testing true}
+{:main maximgb.re-state.core
+ :source-map true
+ :infer-externs true
+ :npm-deps false
+ :foreign-libs [{:file "target/public/js-out/xstate_bundle.js"
+                 :provides ["xstate"]
+                 :global-exports {xstate XState}}]}
