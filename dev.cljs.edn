@@ -6,5 +6,6 @@
  :infer-externs true
  :npm-deps false
  :foreign-libs [{:file "target/public/js-out/xstate_bundle.js"
+                 :file-min "target/public/js-out/xstate_bundle.min.js"
                  :provides ["xstate"]
                  :global-exports {xstate XState}}]}
