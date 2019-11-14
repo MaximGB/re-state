@@ -1,4 +1,5 @@
-{:deps {org.clojure/clojure {:mvn/version "1.10.0"}}
+{:deps {org.clojure/clojure {:mvn/version "1.10.0"}
+        com.rpl/specter {:mvn/version "1.1.2"}}
 
  :paths ["src/cljs"]
 
@@ -6,24 +7,23 @@
                                 com.bhauman/figwheel-main {:mvn/version "0.2.3"}
                                 org.clojure/clojurescript {:mvn/version "1.10.520"}
                                 reagent/reagent {:mvn/version "0.8.1"}
-                                re-frame/re-frame {:mvn/version "0.10.6"}
-                                com.rpl/specter {:mvn/version "1.1.2"}}}
+                                re-frame/re-frame {:mvn/version "0.10.6"}}}
 
 
-           :dev   {:extra-deps {org.clojure/core.async {:mvn/version "0.4.500"}}
+           :dev    {:extra-deps {org.clojure/core.async {:mvn/version "0.4.500"}}
 
-                   :extra-paths ["resources" "target" "test"]}
+                    :extra-paths ["resources" "target" "test"]}
 
 
            :bundle {:extra-paths ["target/public/js-out"]}
 
 
-           :jar   {:extra-deps {pack/pack.alpha {:git/url "https://github.com/juxt/pack.alpha.git"
+           :jar    {:extra-deps {pack/pack.alpha {:git/url "https://github.com/juxt/pack.alpha.git"
                                                  :sha "2769a6224bfb938e777906ea311b3daf7d2220f5"}}
 
-                   :extra-paths ["target/public/js-out"]
+                    :extra-paths ["target/public/js-out"]
 
-                   :main-opts ["-m" "mach.pack.alpha.skinny" "-C:bundle" "--no-libs" "--project-path" "target/maximgb.re-state.jar"]}
+                    :main-opts ["-m" "mach.pack.alpha.skinny" "-C:bundle" "--no-libs" "--project-path" "target/maximgb.re-state.jar"]}
 
 
            :deploy {:extra-deps {deps-deploy {:mvn/version "RELEASE"}}
