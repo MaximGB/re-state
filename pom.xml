@@ -39,6 +39,21 @@
       <version>1.10.0</version>
     </dependency>
     <dependency>
+      <groupId>org.clojure</groupId>
+      <artifactId>clojurescript</artifactId>
+      <version>1.10.520</version>
+    </dependency>
+    <dependency>
+      <groupId>reagent</groupId>
+      <artifactId>reagent</artifactId>
+      <version>0.8.1</version>
+    </dependency>
+    <dependency>
+      <groupId>re-frame</groupId>
+      <artifactId>re-frame</artifactId>
+      <version>0.10.6</version>
+    </dependency>
+    <dependency>
       <groupId>com.rpl</groupId>
       <artifactId>specter</artifactId>
       <version>1.1.2</version>

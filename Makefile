@@ -1,6 +1,7 @@
 -include ~/secrets/.clojars
 
 DEPS_EDN = ./deps.edn
+POM_XML = ./pom.xml
 DEV_CLJS_EDN = ./dev.cljs.edn
 PACKAGE_JSON = ./package.json
 PACKAGE_LOCK = ./package-lock.json
@@ -11,7 +12,7 @@ EXTERNS_SRC = ./src/js/externs.js
 EXTERNS_BUNDLE = ./target/public/js-out/externs.js
 JAR = ./target/maximgb.re-state.jar
 
-.PHONY: clean, deploy, xstate_bundle
+.PHONY: clean, pom, deploy, xstate_bundle
 
 
 all: $(JAR)
@@ -19,6 +20,10 @@ all: $(JAR)
 
 clean:
 	rm -rf ./target/*
+
+
+$(POM_XML): $(DEPS_EDN)
+	clj -Spom
 
 
 $(PACKAGE_LOCK): $(PACKAGE_JSON)
@@ -40,7 +45,7 @@ $(EXTERNS_BUNDLE): $(EXTERNS_SRC)
 xstate_bundle: $(XSTATE_BUNDLE_DEV) $(XSTATE_BUNDLE_PROD) $(EXTERNS_BUNDLE)
 
 
-$(JAR): $(DEPS_EDN) xstate_bundle
+$(JAR): $(POM_XML) xstate_bundle
 	clj -A\:jar
 
 

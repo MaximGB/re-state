@@ -1,13 +1,13 @@
-{:deps {org.clojure/clojure {:mvn/version "1.10.0"}
+{:deps {org.clojure/clojure {:mvn/version "1.10.0" :scope "provided"}
+        org.clojure/clojurescript {:mvn/version "1.10.520" :scope "provided"}
+        reagent/reagent {:mvn/version "0.8.1" :scope "provided"}
+        re-frame/re-frame {:mvn/version "0.10.6" :scope "provided"}
         com.rpl/specter {:mvn/version "1.1.2"}}
 
  :paths ["src/cljs"]
 
  :aliases {:fig   {:extra-deps {com.bhauman/rebel-readline-cljs {:mvn/version "0.1.4"}
-                                com.bhauman/figwheel-main {:mvn/version "0.2.3"}
-                                org.clojure/clojurescript {:mvn/version "1.10.520"}
-                                reagent/reagent {:mvn/version "0.8.1"}
-                                re-frame/re-frame {:mvn/version "0.10.6"}}}
+                                com.bhauman/figwheel-main {:mvn/version "0.2.3"}}}
 
 
            :dev    {:extra-deps {org.clojure/core.async {:mvn/version "0.4.500"}}
