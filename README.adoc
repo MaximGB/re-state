@@ -1,5 +1,12 @@
 = re-state
 :source-highlighter: coderay
+ifdef::env-github[]
+:tip-caption: :bulb:
+:note-caption: :information_source:
+:important-caption: :heavy_exclamation_mark:
+:caution-caption: :fire:
+:warning-caption: :warning
+:endif::[]
 
 image:https://img.shields.io/clojars/v/maximgb/re-state.svg[link=https://clojars.org/maximgb/re-state]
 image:https://img.shields.io/badge/License-MIT-yellow.svg[link=https://raw.githubusercontent.com/MaximGB/re-restate/master/LICENSE]
