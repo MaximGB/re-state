@@ -1,5 +1,4 @@
 = re-state
-:icons: font
 :source-highlighter: coderay
 
 image:https://img.shields.io/clojars/v/maximgb/re-state.svg[link=https://clojars.org/maximgb/re-state]
