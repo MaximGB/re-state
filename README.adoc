@@ -84,9 +84,14 @@ with no other side effects.
 (.addEventListener js/window "load" -main)
 ----
 <1> Require library core namespace, which contains public API
-<2> Define state machine: initial state, state transition rules, read more on machine difinition in https://xstate.js.org/docs[XState documentation]
+<2> Define state machine: initial state, state transition rules
 <3> Define form 2 reagent/re-frame component
 <4> Create and start the controller (or interpreter, or service) interpreting machine defined
 <5> Subscribe to this particular controller state value
 <6> Send `:click` event to the controller upon button widget click
 <7> Mount the example
+
+[NOTE]
+====
+Read more on machine difinition in https://xstate.js.org/docs[XState documentation]
+====
