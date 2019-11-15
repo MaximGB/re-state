@@ -1,4 +1,6 @@
 = re-state
+:icons: font
+:source-highlighter: coderay
 
 image:https://img.shields.io/clojars/v/maximgb/re-state.svg[link=https://clojars.org/maximgb/re-state]
 image:https://img.shields.io/badge/License-MIT-yellow.svg[link=https://raw.githubusercontent.com/MaximGB/re-restate/master/LICENSE]
@@ -15,22 +17,26 @@ application database, thus making it possible to write real independent standalo
 == Instalation
 
 [source, clojure]
-====
+----
 {:deps {org.clojure/clojure {:mvn/version "1.10.0"} ;; <1>
-       org.clojure/clojurescript {:mvn/version "1.10.520"} ;; <2>
-       reagent/reagent {:mvn/version "0.8.1"} ;; <3>
-       re-frame/re-frame {:mvn/version "0.10.6"} ;; <4>
-       maximgb.re-state {:mvn/version "0.4.0-SNAPSHOT"}}} ;; <5>
-====
-<1>, <2>, <3>, <4>, <5> - Use up-to-date versions for your project here
+        org.clojure/clojurescript {:mvn/version "1.10.520"} ;; <2>
+        reagent/reagent {:mvn/version "0.8.1"} ;; <3>
+        re-frame/re-frame {:mvn/version "0.10.6"} ;; <4>
+        maximgb.re-state {:mvn/version "0.4.0-SNAPSHOT"}}} ;; <5>
+----
+<1>
+<2>
+<3>
+<4>
+<5> - Use up-to-date versions for your project here
 
 == Usage
 
 There're three required steps involved in creating a re-frame component which uses library boosted event handling and component isolation:
 
-. Create a state machine (or statechart) definition which describes your component behaviour in statecharts terms
-. Create an intrpreter (or a service) which will controll the behaviour of a particular component according to state machine definition
-. Send events to your component controlling interpreter using `(interpreter-send!)` function.
+- Create a state machine (or statechart) definition which describes your component behaviour in statecharts terms
+- Create an intrpreter (or a service) which will controll the behaviour of a particular component according to state machine definition
+- Send events to your component controlling interpreter using `(interpreter-send!)` function.
 
 
 === Minimal example
@@ -40,7 +46,7 @@ The machine controlling the component behaviour, is very simple, it just cycles 
 with no other side effects.
 
 [source, clojure]
-====
+----
 (ns maximgb.re-state.example.basic
   (:require [re-frame.core :as rf]
             [reagent.core :as reagent]
@@ -76,7 +82,7 @@ with no other side effects.
 
 
 (.addEventListener js/window "load" -main)
-====
+----
 <1> Require library core namespace, which contains public API
 <2> Define state machine: initial state, state transition rules, read more on machine difinition in https://xstate.js.org/docs[XState documentation]
 <3> Define form 2 reagent/re-frame component
