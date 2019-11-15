@@ -12,7 +12,7 @@
 
            :dev    {:extra-deps {org.clojure/core.async {:mvn/version "0.4.500"}}
 
-                    :extra-paths ["resources" "target" "test"]}
+                    :extra-paths ["resources" "target" "test" "examples/src"]}
 
 
            :bundle {:extra-paths ["target/public/js-out"]}
@@ -28,4 +28,9 @@
 
            :deploy {:extra-deps {deps-deploy {:mvn/version "RELEASE"}}
 
-                    :main-opts ["-m" "deps-deploy.deps-deploy" "deploy" "target/maximgb.re-state.jar"]}}}
+                    :main-opts ["-m" "deps-deploy.deps-deploy" "deploy" "target/maximgb.re-state.jar"]}
+
+           ;; - examples -
+
+
+           }}

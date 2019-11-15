@@ -24,3 +24,64 @@ application database, thus making it possible to write real independent standalo
 ====
 
 <1>, <2>, <3>, <4>, <5> - Use up-to-date versions for your project here
+
+== Usage
+
+There're three required steps involved in creating a re-frame component which uses library boosted event handling and component isolation:
+
+. Create a state machine (or statechart) definition which describes your component behaviour in statecharts terms
+. Create an intrpreter (or a service) which will controll the behaviour of a particular component according to state machine definition
+. Send events to your component controlling interpreter using `(interpreter-send!)` function.
+
+
+=== Minimal example
+
+In this example we create a very simple component which displays it's current state and a button allowing to cycle states.
+The machine controlling the component behaviour, is very simple, it just cycles through three available states: `:one`, `:two`, `:three`,
+with no other side effects.
+
+[source, clojure]
+====
+(ns maximgb.re-state.example.basic
+  (:require [re-frame.core :as rf]
+            [reagent.core :as reagent]
+            [maximgb.re-state.core :as rs])) ;; <1>
+
+
+(rs/def-machine basic-machine {:id      :basic-machine
+                               :initial :one
+                               :states {:one   {:on {:click :two}}
+                                        :two   {:on {:click :three}}
+                                        :three {:on {:click :one}}}}) ;; <2>
+
+
+(defn state-cycler [] ;; <3>
+  (let [controller (rs/interpreter-start! (rs/interpreter! basic-machine)) ;; <4>
+        state-sub (rs/isubscribe-state controller)] ;; <5>
+    (fn []
+      [:div
+       "Current state is: "
+       [:div {:style {:display :inline-block
+                      :width "5em"}}
+        @state-sub]
+       [:button
+        {:on-click #(rs/interpreter-send! controller :click)} ;; <6>
+        "Next state"]])))
+
+
+(defn -main []
+  (reagent/render [:div
+                   [:div "Style cycler component, press \"Next state\" button to cycle states."]
+                   [state-cycler]]
+                  (.getElementById js/document "app-basic-example"))) ;; <7>
+
+
+(.addEventListener js/window "load" -main)
+====
+<1> Require library core namespace, which contains public API
+<2> Define state machine: initial state, state transition rules, read more on machine difinition in https://xstate.js.org/docs[XState documentation]
+<3> Define form 2 reagent/re-frame component
+<4> Create and start the controller (or interpreter, or service) interpreting machine defined
+<5> Subscribe to this particular controller state value
+<6> Send `:click` event to the controller upon button widget click
+<7> Mount the example

@@ -1,6 +1,7 @@
-^{:watch-dirs ["src" "test"]
+^{:watch-dirs ["src" "test" "examples/src"]
   :css-dirs ["resources/public"]
-  :auto-testing true}
+  :auto-testing true
+  :extra-main-files {:basic-example {:main maximgb.re-state.example.basic}}}
 {:main maximgb.re-state.core
  :source-map true
  :npm-deps false

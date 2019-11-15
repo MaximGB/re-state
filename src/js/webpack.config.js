@@ -3,6 +3,7 @@ const path = require("path");
 module.exports = (env, argv) => ({
     mode: env,
     entry: "./src/js/webpack.entry.js",
+    devtool: env == "development" ? "source-map" : undefined,
     output: {
         path: path.resolve(__dirname, "../../target/public/js-out"),
         filename: env == "production" ? "xstate_bundle.min.js" : "xstate_bundle.js",
