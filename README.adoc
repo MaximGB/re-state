@@ -219,5 +219,5 @@ When machine enters to or exits from a state it might execute entry and exit act
 ----
 <1> An action or a vector of actions to execute upon state entry
 <2> An action or a vector of actions to execute upon state exit
-<3> If transition doesn't involve any actions specific for the transition initiating event then a shortened syntax can be used
-    - just `{:event :target-state}`
+<3> If transition doesn't involve any actions specific for the transition initiating event then a shortened syntax can be used -
+    just `{:event :target-state}`
