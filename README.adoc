@@ -20,6 +20,11 @@ thus allowing more fine grained event handling. A re-frame component might use a
 handle events related only to the component. The library also implements facilities to isolate component state within re-frame
 application database, thus making it possible to write real independent standalone components.
 
+[NOTE]
+====
+Real life example can be found here: https://github.com/MaximGB/TetrisRF
+====
+
 == Instalation
 
 [source, clojure]
@@ -166,10 +171,10 @@ or their app db *_isolated_* counterparts:
  (fn [db] ;; <4>
    (assoc db :key :value)))
 ----
-<1> - Machine name the action is defined for
-<2> - Machine unique action id
-<3> - *Optional* list of co-effects to inject into re-frame's co-effects map.
-<4> - Action handler
+<1> Machine name the action is defined for
+<2> Machine unique action id
+<3> *Optional* list of co-effects to inject into re-frame's co-effects map.
+<4> Action handler
 
 .The action might be used by machine like this:
 [source, clojure]
@@ -181,7 +186,7 @@ or their app db *_isolated_* counterparts:
                                           :actions :my-db-action}}} ;; <1>
                        :running {}}})
 ----
-<1> - Action is referenced by id, it will be executed when machine transits from `:ready` to `:running` state has recieved `:run` event.
+<1> Action is referenced by id, it will be executed when machine transits from `:ready` to `:running` state has recieved `:run` event.
 
 ==== Entry / Exit actions
 
