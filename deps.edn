@@ -30,12 +30,19 @@
 
                     :main-opts ["-m" "deps-deploy.deps-deploy" "deploy" "target/maximgb.re-state.jar"]}
 
-           ;; - examples, run with :fig -
+           ;; - examples, run with :fig:examples -
+           :examples        {:extra-paths ["target" "examples/src"]}
 
-           :example-basic {:extra-paths ["target" "examples/src"]
 
-                           :main-opts ["-m" "figwheel.main"
-                                       "-co" "example.cljs.edn"
-                                       "-O" "advanced"
-                                       "-o" "docs/examples/basic/prod-main.js"
-                                       "-c" "maximgb.re-state.example.basic"]}}}
+           :example-basic   {:main-opts ["-m"  "figwheel.main"
+                                         "-co" "example.cljs.edn"
+                                         "-O"  "advanced"
+                                         "-o"  "docs/examples/basic/prod-main.js"
+                                         "-c"  "maximgb.re-state.example.basic"]}
+
+
+           :example-actions {:main-opts ["-m"  "figwheel.main"
+                                         "-co" "example.cljs.edn"
+                                         "-O"  "advanced"
+                                         "-o"  "docs/examples/actions/prod-main.js"
+                                         "-c"  "maximgb.re-state.example.actions"]}}}

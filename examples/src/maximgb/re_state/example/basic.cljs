@@ -29,8 +29,7 @@
   (reagent/render [:div
                    [:div "State cycler component, press \"Next state\" button to cycle states."]
                    [state-cycler]]
-                  (or (.getElementById js/document "app-basic-example")
-                      (.getElementById js/document "app"))))
+                  (.getElementById js/document "app")))
 
 
 (.addEventListener js/window "load" -main)
