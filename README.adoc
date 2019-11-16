@@ -113,12 +113,12 @@ Read more on machine difinition in https://xstate.js.org/docs[XState documentati
 [TIP]
 ====
 To read more about statecharts please visit https://statecharts.github.io/ or find and read original David Harel
-"Statecharts: A Visual Formalism for Complex Systems" article.
+"Statecharts: A Visual Formalism for Complex Systems" paper.
 ====
 
 === Machine definition
 
-A machine is defined with `(def-machine)` macro:
+A machine is defined with `(def-machine machine-name machine-config)` macro:
 
 [source, clojure]
 ----
@@ -127,9 +127,48 @@ A machine is defined with `(def-machine)` macro:
               :initial :ready ;; <3>
               :states {:ready {}} ;; <4>
 ----
-<1> - Machine name, it's used to define guards, actions and create machine behaviour executing interpreter.
-<2> - Machine id, optional, but might help to decypher error messages
-<3> - Initial state machine interpreter will start executing the machine behaviour from.
-<4> - Machine states definition, here I define only one `:ready` final state, since it's the state machine starts from.
+<1> Machine name, it's used to define guards, actions and create machine behaviour executing interpreter.
+<2> Machine id, optional, but might help to decypher error messages
+<3> Initial state machine interpreter will start executing the machine behaviour from.
+<4> Machine states definition, here I define only one `:ready` final state, since it's the state machine starts from.
 
 === States, events and state transition actions
+
+Machine states are defined in machine config under `:states` key. `:states` value is a map, where keys are state names
+and values are state definitions. A finite state machine can be in only one of a finite number of states at any given time.
+A state definition describes what actions to execute when machine enters the state (`:entry` key), what actions to execute
+when machine exits the state (`:exit` key), and what transitions are possible for the given state (`:on` key).
+
+==== Actions
+
+When machine transits from one state to another it might execute a set of actions, which being re-frame handlers might affect
+re-frame application database, request co-effects and issue effects. Actions might be defined in-line in machine config as functions
+to execute, or they can be designated via action ids. If action is designated in machine config via an id, then action implementation
+should be defined using one of the following macros:
+
+- `(def-action-db)` - similar to re-frame's `(reg-event-db)`
+- `(def-action-fx)` - similar to re-frame's `(reg-event-fx)`
+- `(def-action-ctx)` - similar to re-frame's `(reg-event-ctx)`
+
+or their app db *_isolated_* counterparts:
+
+- `(def-action-idb)`
+- `(def-action-ifx)`
+- `(def-action-ictx)`
+
+.Action definition example
+[source, clojure]
+----
+(def-action-db
+ :my-db-action ;; <1>
+ [:my-co-effect-to-inject] ;; <2>
+ (fn [db] ;; <3>
+   (assoc db :key :value)))
+----
+<1> - Machine unique action id
+<2> - List of co-effects to inject into re-frame's co-effects map
+<3> - Action handler
+
+==== Entry / Exit actions
+
+When machine enters to or exits from a state it might execute a set of actions. The actions are defined with following macros
