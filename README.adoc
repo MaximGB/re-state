@@ -15,7 +15,7 @@ Re-frame supplimentary library which routes dispatched events via statecharts im
 
 == TL;DR
 
-Re-state routes re-frame events via state chart interpreter, currently backed by https://xstate.js.org[XState] library,
+Re-state routes re-frame events via statechart interpreter, currently backed by https://xstate.js.org[XState] library,
 thus allowing more fine grained event handling. A re-frame component might use a statechart interpreter to dispatch to and
 handle events related only to the component. The library also implements facilities to isolate component state within re-frame
 application database, thus making it possible to write real independent standalone components.
@@ -107,3 +107,29 @@ Example live demo is https://maximgb.github.io/re-state/examples/basic/[here].
 ====
 Read more on machine difinition in https://xstate.js.org/docs[XState documentation]
 ====
+
+== Statecharts DSL
+
+[TIP]
+====
+To read more about statecharts please visit https://statecharts.github.io/ or find and read original David Harel
+"Statecharts: A Visual Formalism for Complex Systems" article.
+
+
+=== Machine definition
+
+A machine is defined with `(def-machine)` macro:
+
+[source, clojure]
+----
+(def-machine my-machine ;; <1>
+             {:id :my-machine ;; <2>
+              :initial :ready ;; <3>
+              :states {:ready {}} ;; <4>
+----
+<1> - Machine name, it's used to define guards, actions and create machine behaviour executing interpreter.
+<2> - Machine id, optional, but might help to decypher error messages
+<3> - Initial state machine interpreter will start executing the machine behaviour from.
+<4> - Machine states definition, here I define only one `:ready` final state, since it's the state machine starts from.
+
+=== States, events and state transition actions
