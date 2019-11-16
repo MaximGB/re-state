@@ -11,19 +11,41 @@
         <link rel="stylesheet"
               href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.16.2/build/styles/default.min.css">
 
+        <style>
+         body {
+             width: 100vw;
+             height: 100vh;
+             overflow: hidden;
+             margin: 0;
+         }
+
+         #maincontainer h2 {
+             flex-grow: 0;
+         }
+
+         #maincontainer {
+             min-height: 100%;
+         }
+        </style>
     </head>
     <body>
-        <h1 class="ui header">%TITLE%</h1>
-        <div class="ui internally celled grid">
+        <div id="maincontainer" class="ui internally celled equal height stretched grid">
             <div class="row">
-                <div id="app" class="eight wide column"></div>
-                <h2 class="ui sub header">Example source:</h2>
                 <div class="eight wide column">
-                    <div id="source-dimmer" class="ui active inverted dimmer">
-                        <div class="ui text loaded">Loading example source code</div>
+                    <h2 class="ui sub header">%TITLE%</h2>
+                    <div class="ui segment">
+                        <div id="app"></div>
                     </div>
-                    <div id="source">
-                        <pre><code class="clojure"></code></pre>
+                </div>
+                <div class="eight wide column">
+                    <h2 class="ui sub header">Example source:</h2>
+                    <div class="ui segment">
+                        <div id="source-dimmer" class="ui active inverted dimmer">
+                            <div class="ui indeterminate text loader">Loading example source code</div>
+                        </div>
+                        <div id="source">
+                            <pre><code class="clojure"></code></pre>
+                        </div>
                     </div>
                 </div>
             </div>
