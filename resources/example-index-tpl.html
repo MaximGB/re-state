@@ -3,7 +3,7 @@
     <head>
         <meta charset="UTF-8">
 
-        <title>maximgb.re-state basic example</title>
+        <title>%TITLE%</title>
 
         <link rel="stylesheet"
               href="//cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css">
@@ -13,7 +13,7 @@
 
     </head>
     <body>
-        <h1 class="ui header">maximgb.re-state basic example</h1>
+        <h1 class="ui header">%TITLE%</h1>
         <div class="ui internally celled grid">
             <div class="row">
                 <div id="app" class="eight wide column"></div>
@@ -42,7 +42,7 @@
              return text.replace(/&/g, '&amp;').replace(/>/g, '&gt;').replace(/</g, '&lt;').replace(/"/g, '&quot;');
          }
 
-         fetch('https://raw.githubusercontent.com/MaximGB/re-state/master/./examples/src/maximgb/re_state/example/basic.cljs').then(
+         fetch('https://raw.githubusercontent.com/MaximGB/re-state/master/%EXAMPLE_CLJS%').then(
              function fetchSuccess(response) {
                  return response.text();
              }
