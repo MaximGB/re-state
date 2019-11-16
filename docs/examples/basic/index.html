@@ -15,15 +15,27 @@
              margin: 0;
          }
 
+         .example-container {
+             position: absolute;
+             top: 1em;
+             left: 1em;
+             width: 50%;
+         }
+
          .source {
              position: absolute;
-             right: 0px;
+             top: 1em;
+             right: 1em;
              width: 50%;
+         }
+
+         .source pre {
+             margin: 0;
          }
         </style>
     </head>
     <body>
-        <div id="app-basic-example"></div>
+        <div id="app-basic-example" class="example-container"></div>
         <div class="source">
             <pre><code class="clojure"> (ns ^:figwheel-hooks maximgb.re-state.example.basic
   (:require [re-frame.core :as rf]
@@ -54,7 +66,7 @@
 
 (defn ^:after-load -main []
   (reagent/render [:div
-                   [:div "Style cycler component, press \"Next state\" button to cycle states."]
+                   [:div "State cycler component, press \"Next state\" button to cycle states."]
                    [state-cycler]]
                   (.getElementById js/document "app-basic-example")))
 
