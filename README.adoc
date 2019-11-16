@@ -58,7 +58,7 @@ with no other side effects.
 
 [NOTE]
 ====
-Example live demo is https://maximgb.github.io/re-state/examples/basic/[here].
+Basic example live demo is https://maximgb.github.io/re-state/examples/basic/[here].
 ====
 
 
@@ -93,9 +93,9 @@ Example live demo is https://maximgb.github.io/re-state/examples/basic/[here].
 
 (defn -main []
   (reagent/render [:div
-                   [:div "Style cycler component, press \"Next state\" button to cycle states."]
+                   [:div "State cycler component, press \"Next state\" button to cycle states."]
                    [state-cycler]]
-                  (.getElementById js/document "app-basic-example"))) ;; <7>
+                  (.getElementById js/document "app"))) ;; <7>
 
 
 (.addEventListener js/window "load" -main)
@@ -137,14 +137,18 @@ A machine is defined with `(def-machine machine-name machine-config)` macro:
 <3> Initial state machine interpreter will start executing the machine behaviour from.
 <4> Machine states definition, here I define only one `:ready` final state, since it's the state machine starts from.
 
-=== States, events and state transition actions
+=== States, events, guards and state transition actions
 
 Machine states are defined in machine config under `:states` key. `:states` value is a map, where keys are state names
 and values are state definitions. A finite state machine can be in only one of a finite number of states at any given time.
 A state definition describes what actions to execute when machine enters the state (`:entry` key), what actions to execute
 when machine exits the state (`:exit` key), and what transitions are possible for the given state (`:on` key).
 
-==== Actions
+A set of transitons for the state is defined under state definition `:on` key, the key value might be either map or a vector,
+it describes what events are valid for the state, what are destination states for every event *(or to be more precise
+for every event and guard condition)* and what actions to execute upon transition.
+
+==== State transition actions
 
 When machine transits from one state to another it might execute a set of actions, which being re-frame handlers might affect
 re-frame application database, request co-effects and issue effects. Actions might be defined in-line in machine config as functions
@@ -176,6 +180,8 @@ or their app db *_isolated_* counterparts:
 <3> *Optional* list of co-effects to inject into re-frame's co-effects map.
 <4> Action handler
 
+Transition actions a declared using `:actions` key of transition definition.
+
 .The action might be used by machine like this:
 [source, clojure]
 ----
@@ -183,11 +189,35 @@ or their app db *_isolated_* counterparts:
              {:id :my-machine
               :initial :ready
               :states {:ready {:on {:run {:target :running
-                                          :actions :my-db-action}}} ;; <1>
+                                          :actions :my-db-action}}} ;; <1>, <2>
                        :running {}}})
 ----
 <1> Action is referenced by id, it will be executed when machine transits from `:ready` to `:running` state has recieved `:run` event.
+<2> Both single action id (or in-line function) and vector with mix of action ids / inline functions are valid.
 
-==== Entry / Exit actions
+[NOTE]
+====
+A simple traffic light example implemented using only states and strict state transition actins live demo
+is https://maximgb.github.io/re-state/examples/actions/[here].
+====
 
-When machine enters to or exits from a state it might execute a set of actions. The actions are defined with following macros
+==== State entry / exit actions
+
+When machine enters to or exits from a state it might execute entry and exit actions. To declare what actions to execute one should use
+`:entry`, `:exit` keys of a state definition.
+
+.State entry / exit actions designation
+[source, clojure]
+----
+(def-machine my-machine
+             {:id :my-machine
+              :initial :ready
+              :states {:ready {:entry :in-ready ;; <1>
+                               :exit  :out-ready ;; <2>
+                               :on {:run :running}} ;; <3>
+                       :running {}}})
+----
+<1> An action or a vector of actions to execute upon state entry
+<2> An action or a vector of actions to execute upon state exit
+<3> If transition doesn't involve any actions specific for the transition initiating event then a shortened syntax can be used
+    - just `{:event :target-state}`
