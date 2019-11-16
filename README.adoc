@@ -114,7 +114,7 @@ Read more on machine difinition in https://xstate.js.org/docs[XState documentati
 ====
 To read more about statecharts please visit https://statecharts.github.io/ or find and read original David Harel
 "Statecharts: A Visual Formalism for Complex Systems" article.
-
+====
 
 === Machine definition
 
