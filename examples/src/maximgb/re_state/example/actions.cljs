@@ -4,31 +4,31 @@
             [maximgb.re-state.core :as rs]))
 
 
-(rs/def-machine semaphor-machine {:id :semaphor
-                                  :initial :off
-                                  :states {:off    {:on {:toggle    {:target  :green
-                                                                     :actions [:turn-off-lights :turn-on-green]}}}
+(rs/def-machine traffic-light-machine
+  {:initial :off
+   :states {:off    {:on {:toggle    {:target  :green
+                                      :actions [:turn-off-lights :turn-on-green]}}}
 
-                                           :green  {:on {:to-yellow {:target  :yellow
-                                                                     :actions [:turn-off-lights :turn-on-yellow]}
+            :green  {:on {:to-yellow {:target  :yellow
+                                      :actions [:turn-off-lights :turn-on-yellow]}
 
-                                                         :toggle    {:target  :off
-                                                                     :actions :turn-off-lights}}}
+                          :toggle    {:target  :off
+                                      :actions :turn-off-lights}}}
 
-                                           :yellow {:on {:to-red    {:target  :red
-                                                                     :actions [:turn-off-lights :turn-on-red]}
+            :yellow {:on {:to-red    {:target  :red
+                                      :actions [:turn-off-lights :turn-on-red]}
 
-                                                         :toggle    {:target  :off
-                                                                     :actions :turn-off-lights}}}
+                          :toggle    {:target  :off
+                                      :actions :turn-off-lights}}}
 
-                                           :red    {:on {:to-green  {:target  :green
-                                                                     :actions [:turn-off-lights :turn-on-green]}
+            :red    {:on {:to-green  {:target  :green
+                                      :actions [:turn-off-lights :turn-on-green]}
 
-                                                         :toggle    {:target :off
-                                                                     :actions :turn-off-lights}}}}})
+                          :toggle    {:target :off
+                                      :actions :turn-off-lights}}}}})
 
 (rs/def-action-db
-  semaphor-machine
+  traffic-light-machine
   :turn-off-lights
   (fn [db]
     (assoc db
@@ -38,7 +38,7 @@
 
 
 (rs/def-action-db
-  semaphor-machine
+  traffic-light-machine
   :turn-on-green
   (fn [db]
     (assoc db
@@ -46,7 +46,7 @@
 
 
 (rs/def-action-db
-  semaphor-machine
+  traffic-light-machine
   :turn-on-yellow
   (fn [db]
     (assoc db
@@ -54,7 +54,7 @@
 
 
 (rs/def-action-db
-  semaphor-machine
+  traffic-light-machine
   :turn-on-red
   (fn [db]
     (assoc db
@@ -80,7 +80,7 @@
 
 
 (defn traffic-light []
-  (let [controller (rs/interpreter-start! (rs/interpreter! semaphor-machine))
+  (let [controller (rs/interpreter-start! (rs/interpreter! traffic-light-machine))
         state (rs/isubscribe-state controller)
         green-sub (rf/subscribe [:green])
         yellow-sub (rf/subscribe [:yellow])
@@ -89,15 +89,15 @@
       [:div
        [(if @green-sub
           :button.ui.massive.circular.green.icon.button
-          :button.ui.massive.circular.icon.button)
+          :button.ui.massive.circular.disabled.icon.button)
         {:on-click #(rs/interpreter-send! controller :to-yellow)}]
        [(if @yellow-sub
           :button.ui.massive.circular.yellow.icon.button
-          :button.ui.massive.circular.icon.button)
+          :button.ui.massive.circular.disabled.icon.button)
         {:on-click #(rs/interpreter-send! controller :to-red)}]
        [(if @red-sub
           :button.ui.massive.circular.red.icon.button
-          :button.ui.massive.circular.icon.button)
+          :button.ui.massive.circular.disabled.icon.button)
         {:on-click #(rs/interpreter-send! controller :to-green)}]
        [:div {:style {:margin-top "0.5em"}}
         [:div.ui.buttons
