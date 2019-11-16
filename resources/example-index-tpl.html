@@ -19,12 +19,20 @@
              margin: 0;
          }
 
+         #maincontainer {
+             min-height: 100%;
+         }
+
          #maincontainer h2 {
              flex-grow: 0;
          }
 
-         #maincontainer {
-             min-height: 100%;
+         #source-segment {
+             padding: 0px;
+         }
+
+         #source-segment .hljs {
+             background-color: transparent;
          }
         </style>
     </head>
@@ -39,7 +47,7 @@
                 </div>
                 <div class="eight wide column">
                     <h2 class="ui sub header">Example source:</h2>
-                    <div class="ui segment">
+                    <div id="source-segment" class="ui segment">
                         <div id="source-dimmer" class="ui active inverted dimmer">
                             <div class="ui indeterminate text loader">Loading example source code</div>
                         </div>
