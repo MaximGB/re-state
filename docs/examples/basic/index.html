@@ -43,9 +43,7 @@
                         <div id="source-dimmer" class="ui active inverted dimmer">
                             <div class="ui indeterminate text loader">Loading example source code</div>
                         </div>
-                        <div id="source">
-                            <pre><code class="clojure"></code></pre>
-                        </div>
+                        <pre><code class="clojure"></code></pre>
                     </div>
                 </div>
             </div>
@@ -56,8 +54,7 @@
         <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.16.2/build/languages/clojure.min.js"></script>
 
         <script>
-         var sourceDiv = document.getElementById('source'),
-             sourceCode = document.querySelector('#source pre code'),
+         var sourceCode = document.querySelector('#source pre code'),
              sourceDimmer = document.getElementById('source-dimmer');
 
          function htmlEscape(text){
