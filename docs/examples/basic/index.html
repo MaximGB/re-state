@@ -67,8 +67,7 @@
          fetch('https://raw.githubusercontent.com/MaximGB/re-state/master/./examples/src/maximgb/re_state/example/basic.cljs').then(
              function fetchSuccess(response) {
                  return response.text();
-             }
-
+             },
              function fetchFailure() {
                  sourceDimmer.remove();
                  sourceCode.innerHTML = "Loading failed.";
