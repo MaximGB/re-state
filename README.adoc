@@ -220,4 +220,36 @@ When machine enters to or exits from a state it might execute entry and exit act
 <1> An action or a vector of actions to execute upon state entry
 <2> An action or a vector of actions to execute upon state exit
 <3> If transition doesn't involve any actions specific for the transition initiating event then a shortened syntax can be used -
-    just `{:event :target-state}`
+    just `:on {:event :target-state}`
+
+////
+[NOTE]
+====
+An updated traffic light example which uses entry / exit action live demo
+is https://maximgb.github.io/re-state/examples/actions/[here], compare this the previous one.
+====
+////
+
+==== Transition guards
+
+TODO:
+
+=== Parallel states
+
+TODO:
+
+=== Machine spawning service (co-effects/effects)
+
+TODO:
+
+=== Component isolation
+
+TODO:
+
+==== Isolated subscriptions
+
+TODO:
+
+==== Machine state subscription
+
+TODO:
