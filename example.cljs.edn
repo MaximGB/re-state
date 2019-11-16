@@ -1,0 +1,8 @@
+^{:watch-dirs ["examples/src"]}
+{:source-map false
+ :npm-deps false
+ :foreign-libs [{:file "target/public/js-out/xstate_bundle.js"
+                 :file-min "target/public/js-out/xstate_bundle.min.js"
+                 :provides ["xstate"]
+                 :global-exports {xstate XState}}]
+ :externs ["target/public/js-out/externs.js"]}

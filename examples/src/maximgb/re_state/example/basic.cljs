@@ -27,7 +27,7 @@
 
 (defn ^:after-load -main []
   (reagent/render [:div
-                   [:div "Style cycler component, press \"Next state\" button to cycle states."]
+                   [:div "State cycler component, press \"Next state\" button to cycle states."]
                    [state-cycler]]
                   (.getElementById js/document "app-basic-example")))
 

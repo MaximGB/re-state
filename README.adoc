@@ -51,6 +51,11 @@ In this example we create a very simple component which displays it's current st
 The machine controlling the component behaviour, is very simple, it just cycles through three available states: `:one`, `:two`, `:three`,
 with no other side effects.
 
+[NOTE]
+====
+Example live demo is https://maximgb.github.io/re-state/examples/basic/[here].
+
+
 [source, clojure]
 ----
 (ns maximgb.re-state.example.basic
@@ -97,7 +102,7 @@ with no other side effects.
 <6> Send `:click` event to the controller upon button widget click
 <7> Mount the example
 
-[NOTE]
+[TIP]
 ====
 Read more on machine difinition in https://xstate.js.org/docs[XState documentation]
 ====
