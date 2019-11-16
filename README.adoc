@@ -189,11 +189,11 @@ Transition actions a declared using `:actions` key of transition definition.
              {:id :my-machine
               :initial :ready
               :states {:ready {:on {:run {:target :running
-                                          :actions :my-db-action}}} ;; <1>, <2>
+                                          :actions :my-db-action}}} ;; <1>
                        :running {}}})
 ----
 <1> Action is referenced by id, it will be executed when machine transits from `:ready` to `:running` state has recieved `:run` event.
-<2> Both single action id (or in-line function) and vector with mix of action ids / inline functions are valid.
+    Both single action id (or in-line function) and vector with mix of action ids / inline functions are valid.
 
 [NOTE]
 ====
