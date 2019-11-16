@@ -156,18 +156,32 @@ or their app db *_isolated_* counterparts:
 - `(def-action-ifx)`
 - `(def-action-ictx)`
 
-.Action definition example
+.Action definition example:
 [source, clojure]
 ----
 (def-action-db
- :my-db-action ;; <1>
- [:my-co-effect-to-inject] ;; <2>
- (fn [db] ;; <3>
+ my-machine ;; <1>
+ :my-db-action ;; <2>
+ [:my-co-effect-to-inject] ;; <3>
+ (fn [db] ;; <4>
    (assoc db :key :value)))
 ----
-<1> - Machine unique action id
-<2> - List of co-effects to inject into re-frame's co-effects map
-<3> - Action handler
+<1> - Machine name the action is defined for
+<2> - Machine unique action id
+<3> - *Optional* list of co-effects to inject into re-frame's co-effects map.
+<4> - Action handler
+
+.The action might be used by machine like this:
+[source, clojure]
+----
+(def-machine my-machine
+             {:id :my-machine
+              :initial :ready
+              :states {:ready {:on {:run {:target :running
+                                          :actions :my-db-action}}} ;; <1>
+                       :running {}}})
+----
+<1> - Action is referenced by id, it will be executed when machine transits from `:ready` to `:running` state has recieved `:run` event.
 
 ==== Entry / Exit actions
 
