@@ -73,6 +73,7 @@
                  sourceCode.innerHTML = "Loading failed.";
              }).then(
                  function textSuccess(text) {
+                     sourceDimmer.remove();
                      sourceCode.innerHTML = htmlEscape(text);
                      hljs.highlightBlock(sourceCode);
                  },
