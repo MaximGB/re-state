@@ -54,6 +54,7 @@ with no other side effects.
 [NOTE]
 ====
 Example live demo is https://maximgb.github.io/re-state/examples/basic/[here].
+====
 
 
 [source, clojure]
