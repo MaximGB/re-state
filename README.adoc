@@ -230,24 +230,24 @@ is https://maximgb.github.io/re-state/examples/entryexit/[here], compare this th
 
 ==== Transition guards
 
-TODO:
+TODO: see tests folder for more info
 
 === Parallel states
 
-TODO:
+TODO: see tests folder for more info
 
 === Component isolation
 
-TODO:
+TODO: see tests folder for more info
 
 ==== Isolated subscriptions
 
-TODO:
+TODO: see tests folder for more info
 
 ==== Machine state subscription
 
-TODO:
+TODO: see tests folder for more info
 
 === Machine spawning service (co-effects/effects)
 
-TODO:
+TODO: see tests folder for more info
