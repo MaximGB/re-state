@@ -238,10 +238,6 @@ TODO:
 
 TODO:
 
-=== Machine spawning service (co-effects/effects)
-
-TODO:
-
 === Component isolation
 
 TODO:
@@ -251,5 +247,9 @@ TODO:
 TODO:
 
 ==== Machine state subscription
+
+TODO:
+
+=== Machine spawning service (co-effects/effects)
 
 TODO:
