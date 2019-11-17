@@ -2,7 +2,8 @@
   :css-dirs ["resources/public"]
   :auto-testing true
   :extra-main-files {:basic-example {:main maximgb.re-state.example.basic}
-                     :actions-example {:main maximgb.re-state.example.actions}}}
+                     :actions-example {:main maximgb.re-state.example.actions}
+                     :entry-exit-example {:main maximgb.re-state.example.entryexit}}}
 {:main maximgb.re-state.core
  :source-map true
  :npm-deps false

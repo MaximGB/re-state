@@ -222,13 +222,11 @@ When machine enters to or exits from a state it might execute entry and exit act
 <3> If transition doesn't involve any actions specific for the transition initiating event then a shortened syntax can be used -
     just `:on {:event :target-state}`
 
-////
 [NOTE]
 ====
 An updated traffic light example which uses entry / exit action live demo
-is https://maximgb.github.io/re-state/examples/actions/[here], compare this the previous one.
+is https://maximgb.github.io/re-state/examples/entryexit/[here], compare this the previous one.
 ====
-////
 
 ==== Transition guards
 

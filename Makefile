@@ -24,6 +24,11 @@ EXAMPLE_ACTIONS_HTML_TITLE = "maximgb.re-state transition actions example"
 EXAMPLE_ACTIONS_INDEX = $(EXAMPLE_ACTIONS)/index.html
 EXAMPLE_ACTIONS_CLJS = ./examples/src/maximgb/re_state/example/actions.cljs
 
+EXAMPLE_ENTRYEXIT = ./docs/examples/entryexit
+EXAMPLE_ENTRYEXIT_HTML_TITLE = "maximgb.re-state entry/exit actions example"
+EXAMPLE_ENTRYEXIT_INDEX = $(EXAMPLE_ENTRYEXIT)/index.html
+EXAMPLE_ENTRYEXIT_CLJS = ./examples/src/maximgb/re_state/example/entryexit.cljs
+
 .PHONY: clean pom deploy xstate_bundle examples
 
 
@@ -63,7 +68,7 @@ $(EXAMPLE_BASIC_INDEX): $(EXAMPLE_HTML_TPL)
 
 
 $(EXAMPLE_BASIC): xstate_bundle $(EXAMPLE_BASIC_CLJS) $(EXAMPLE_BASIC_INDEX)
-	export EXAMPLE_TITLE="$$(echo $(EXAMPLE_BASIC_HTML_TITLE))"; \
+	export EXAMPLE_TITLE="$$(echo $(EXAMPLE_BASIC_HTML_TITLE) | sed -e 's/[\/&]/\\&/g')"; \
   export EXAMPLE_CLJS="$$(echo $(EXAMPLE_BASIC_CLJS) | sed -e 's/[\/&]/\\&/g')"; \
 	sed -i -E -z -e "s/%TITLE%/$$EXAMPLE_TITLE/g" -e "s/%EXAMPLE_CLJS%/$$EXAMPLE_CLJS/g" $(EXAMPLE_BASIC_INDEX)
 	clj -A\:fig:examples:example-basic
@@ -75,13 +80,25 @@ $(EXAMPLE_ACTIONS_INDEX): $(EXAMPLE_HTML_TPL)
 
 
 $(EXAMPLE_ACTIONS): xstate_bundle $(EXAMPLE_ACITONS_CLJS) $(EXAMPLE_ACTIONS_INDEX)
-	export EXAMPLE_TITLE="$$(echo $(EXAMPLE_ACTIONS_HTML_TITLE))"; \
+	export EXAMPLE_TITLE="$$(echo $(EXAMPLE_ACTIONS_HTML_TITLE) | sed -e 's/[\/&]/\\&/g')"; \
   export EXAMPLE_CLJS="$$(echo $(EXAMPLE_ACTIONS_CLJS) | sed -e 's/[\/&]/\\&/g')"; \
 	sed -i -E -z -e "s/%TITLE%/$$EXAMPLE_TITLE/g" -e "s/%EXAMPLE_CLJS%/$$EXAMPLE_CLJS/g" $(EXAMPLE_ACTIONS_INDEX)
 	clj -A\:fig:examples:example-actions
 
 
-examples: $(EXAMPLE_BASIC) $(EXAMPLE_ACTIONS)
+$(EXAMPLE_ENTRYEXIT_INDEX): $(EXAMPLE_HTML_TPL)
+	mkdir -p $(EXAMPLE_ENTRYEXIT)
+	cp -f $(EXAMPLE_HTML_TPL) $(EXAMPLE_ENTRYEXIT_INDEX)
+
+
+$(EXAMPLE_ENTRYEXIT): xstate_bundle $(EXAMPLE_ENTRYEXIT_CLJS) $(EXAMPLE_ENTRYEXIT_INDEX)
+	export EXAMPLE_TITLE="$$(echo $(EXAMPLE_ENTRYEXIT_HTML_TITLE) | sed -e 's/[\/&]/\\&/g')"; \
+  export EXAMPLE_CLJS="$$(echo $(EXAMPLE_ENTRYEXIT_CLJS) | sed -e 's/[\/&]/\\&/g')"; \
+	sed -i -E -z -e "s/%TITLE%/$$EXAMPLE_TITLE/g" -e "s/%EXAMPLE_CLJS%/$$EXAMPLE_CLJS/g" $(EXAMPLE_ENTRYEXIT_INDEX)
+	clj -A\:fig:examples:example-entry-exit
+
+
+examples: $(EXAMPLE_BASIC) $(EXAMPLE_ACTIONS) $(EXAMPLE_ENTRYEXIT)
 
 
 $(JAR): $(POM_XML) xstate_bundle
