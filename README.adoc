@@ -197,7 +197,7 @@ Transition actions a declared using `:actions` key of transition definition.
 
 [NOTE]
 ====
-A simple traffic light example implemented using only states and strict state transition actins live demo
+A simple traffic light example implemented using only states and strict state transition actions live demo
 is https://maximgb.github.io/re-state/examples/actions/[here].
 ====
 
