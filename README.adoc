@@ -11,7 +11,7 @@ ifdef::env-github[]
 image:https://img.shields.io/clojars/v/maximgb/re-state.svg[link=https://clojars.org/maximgb/re-state]
 image:https://img.shields.io/badge/License-MIT-yellow.svg[link=https://raw.githubusercontent.com/MaximGB/re-restate/master/LICENSE]
 
-Re-frame supplimentary library which routes dispatched events via statecharts implementing final state machines
+Re-frame supplimentary library routing dispatched events via statecharts implementing final state machines
 
 == TL;DR
 
