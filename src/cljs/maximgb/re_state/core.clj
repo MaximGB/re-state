@@ -1,4 +1,5 @@
-(ns maximgb.re-state.core)
+(ns maximgb.re-state.core
+  {:author "Maxim Bazhenov"})
 
 
 (defmacro def-machine

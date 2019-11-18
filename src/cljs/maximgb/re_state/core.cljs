@@ -1,4 +1,5 @@
 (ns maximgb.re-state.core
+  {:author "Maxim Bazhenov"}
   (:require-macros [maximgb.re-state.core])
   (:require [maximgb.re-state.protocols :as protocols]
             [maximgb.re-state.impl.machine :as machine]
@@ -9,7 +10,8 @@
             [maximgb.re-state.utils :as utils]
             [maximgb.re-state.co-effects :as co-effects]
             [maximgb.re-state.effects :as effects]
-            [maximgb.re-state.subscriptions :as subscriptions]))
+            [maximgb.re-state.subscriptions :as subscriptions]
+            [maximgb.re-state.services.re-state]))
 
 (def machine->config protocols/machine->config)
 (def machine->options protocols/machine->options)
@@ -56,16 +58,4 @@
 (def isubscribe subscriptions/isubscribe)
 (def isubscribe-state subscriptions/isubscribe-state)
 
-(def register-interpreter! registry/register-interpreter!)
-(def unregister-interpreter! registry/unregister-interpreter!)
-(def has-interpreter? registry/has-interpreter?)
-(def id->interpreter registry/id->interpreter)
-
-(def cofx-instance ::cofx-instance)
-(def cofx-spawn ::cofx-spawn)
-
-(def fx-register ::fx-register)
-(def fx-unregister ::fx-unregister)
-(def fx-start ::fx-start)
-(def fx-stop ::fx-stop)
-(def fx-send ::fx-send)
+(def re-state-service ::re-state)
