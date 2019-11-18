@@ -6,7 +6,7 @@ ifdef::env-github[]
 :important-caption: :heavy_exclamation_mark:
 :caution-caption: :fire:
 :warning-caption: :warning
-:endif::[]
+endif::[]
 
 image:https://img.shields.io/clojars/v/maximgb/re-state.svg[link=https://clojars.org/maximgb/re-state]
 image:https://img.shields.io/badge/License-MIT-yellow.svg[link=https://raw.githubusercontent.com/MaximGB/re-restate/master/LICENSE]
@@ -228,9 +228,68 @@ An updated traffic light example which uses entry / exit action live demo
 is https://maximgb.github.io/re-state/examples/entryexit/[here], compare this the previous one.
 ====
 
-==== Transition guards
+==== Guarded transitions
 
-TODO: see tests folder for more info
+Guarded transitions allow you to transit to differen states depending on some condition. One can analyze event accompanying data
+and select a state to transit depending on subdomain a data value belongs to, like transit to `:too-small` state in case event
+payload value less then `100` and `:enough` state in case it's `>= 100`. The behaviour can be achieved with transition guards.
+
+Event transition destination might be defined using vector whose items are maps with `:target` and `:cond` keys, where `:cond`
+designates a guard - predicate function used to select transition target state. If the function returns `true` then a corresponding
+target is selected.
+
+.Guarded transition definition
+[source, clojure]
+----
+(def-machine my-machine
+             {:id :my-machine
+              :initial :ready
+              :states {:ready {:on {:run [{:cond   :slow? ;; <1>
+                                           :target :run-slowly}
+
+                                          {:cond   :fast? ;; <2>
+                                           :target :run-fast}
+
+                                          {:target :run-free}]}} ;; <3>
+                       :run-slowly {}
+                       :run-fast   {}
+                       :run-free   {}}})
+----
+<1> If a guard designated by `:slow?` id returns true then machine will transit to `:run-slowly` state.
+<2> If a guard designated by `:fast?` id returns true then machine will transit to `:run-fast` state.
+<3> If niether guards will return `true` then machine will transit to `:run-free` state.
+
+Both `:slow?` and `:fast?` guards implementation should be defined. There're several macros which allows to define a guard,
+they are similar to action defining macros:
+
+- `(def-guard-ev)`
+- `(def-guard-db)`
+- `(def-guard-fx)`
+- `(def-guard-ctx)`
+
+and their isolated siblings
+
+- `(def-guard-idb)`
+- `(def-guard-ifx)`
+- `(def-guard-ictx)`
+
+.Guards definition
+[source, clojure]
+----
+(def-guard-ev ;; <1>
+  my-machine
+  :slow?
+  [event speed] ;; <2>
+  (and speed (< speed 7)))
+
+(def-guard-ev
+  my-machine
+  :fast
+  [event speed]
+  (and speed (> speed 7))
+----
+<1> `def-guard-ev` defines a guard which will recieve only event and it's payload
+<2> `:run` event might be accompanied with `speed` parameter which guard will analyze
 
 === Parallel states
 
