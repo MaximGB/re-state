@@ -53,4 +53,10 @@
                                             "-co" "example.cljs.edn"
                                             "-O"  "advanced"
                                             "-o"  "docs/examples/entryexit/prod-main.js"
-                                            "-c"  "maximgb.re-state.example.entryexit"]}}}
+                                            "-c"  "maximgb.re-state.example.entryexit"]}
+
+           :example-gauge      {:main-opts ["-m"  "figwheel.main"
+                                            "-co" "example.cljs.edn"
+                                            "-O"  "advanced"
+                                            "-o"  "docs/examples/gauge/prod-main.js"
+                                            "-c"  "maximgb.re-state.example.gauge"]}}}

@@ -29,6 +29,11 @@ EXAMPLE_ENTRYEXIT_HTML_TITLE = "maximgb.re-state entry/exit actions example"
 EXAMPLE_ENTRYEXIT_INDEX = $(EXAMPLE_ENTRYEXIT)/index.html
 EXAMPLE_ENTRYEXIT_CLJS = ./examples/src/maximgb/re_state/example/entryexit.cljs
 
+EXAMPLE_GAUGE = ./docs/examples/gauge
+EXAMPLE_GAUGE_HTML_TITLE = "maximgb.re-state gauge widget example"
+EXAMPLE_GAUGE_INDEX = $(EXAMPLE_GAUGE)/index.html
+EXAMPLE_GAUGE_CLJS = ./examples/src/maximgb/re_state/example/gauge.cljs
+
 .PHONY: clean pom deploy xstate_bundle examples
 
 
@@ -98,7 +103,19 @@ $(EXAMPLE_ENTRYEXIT): xstate_bundle $(EXAMPLE_ENTRYEXIT_CLJS) $(EXAMPLE_ENTRYEXI
 	clj -A\:fig:examples:example-entry-exit
 
 
-examples: $(EXAMPLE_BASIC) $(EXAMPLE_ACTIONS) $(EXAMPLE_ENTRYEXIT)
+$(EXAMPLE_GAUGE_INDEX): $(EXAMPLE_HTML_TPL)
+	mkdir -p $(EXAMPLE_GAUGE)
+	cp -f $(EXAMPLE_HTML_TPL) $(EXAMPLE_GAUGE_INDEX)
+
+
+$(EXAMPLE_GAUGE): xstate_bundle $(EXAMPLE_GAUGE_CLJS) $(EXAMPLE_GAUGE_INDEX)
+	export EXAMPLE_TITLE="$$(echo $(EXAMPLE_GAUGE_HTML_TITLE) | sed -e 's/[\/&]/\\&/g')"; \
+  export EXAMPLE_CLJS="$$(echo $(EXAMPLE_GAUGE_CLJS) | sed -e 's/[\/&]/\\&/g')"; \
+	sed -i -E -z -e "s/%TITLE%/$$EXAMPLE_TITLE/g" -e "s/%EXAMPLE_CLJS%/$$EXAMPLE_CLJS/g" $(EXAMPLE_GAUGE_INDEX)
+	clj -A\:fig:examples:example-gauge
+
+
+examples: $(EXAMPLE_BASIC) $(EXAMPLE_ACTIONS) $(EXAMPLE_ENTRYEXIT) $(EXAMPLE_GAUGE)
 
 
 $(JAR): $(POM_XML) xstate_bundle
