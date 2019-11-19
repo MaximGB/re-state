@@ -291,6 +291,13 @@ and their isolated siblings
 <1> `def-guard-ev` defines a guard which will recieve only event and it's payload
 <2> `:run` event might be accompanied with `speed` parameter which guard will analyze
 
+[NOTE]
+====
+A good way to apply transition guards can be found in https://maximgb.github.io/re-state/examples/gauge/[gauge example].
+The drag operation starts only when pointer moves about 3 pixes from the starting position, the transition is guarded
+by the condition guard.
+====
+
 ==== Actions and guards metadata
 
 Both actions and guards can be designated not only as an id, but as a map containing action id under `:type` keyword and any other
@@ -314,9 +321,5 @@ TODO: see tests folder for more info
 TODO: see tests folder for more info
 
 ==== Machine state subscription
-
-TODO: see tests folder for more info
-
-=== Machine spawning service (co-effects/effects)
 
 TODO: see tests folder for more info

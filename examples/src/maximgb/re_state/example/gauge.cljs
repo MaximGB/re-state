@@ -200,7 +200,7 @@
 
 (defn ^:after-load -main []
   (reagent/render [:div
-                   "Drag & Drop the red thumb to change the value."
+                   "Drag & drop the red thumb to change the value."
                    [gauge-component]]
                   (.getElementById js/document "app")))
 
