@@ -101,7 +101,7 @@
       (interpreter->started? [this]
         (:started? @*interpreter))
 
-      (-interpreter-start! [this init-payload]
+      (-interpreter-start! [this init-payload sync?]
         (let [started? (protocols/interpreter->started? this)]
           (if-not started?
             ;; Starting
@@ -110,7 +110,7 @@
                       assoc
                       :started? true)
               ;; Dispatching self-initialization event to transit to machine initial state
-              (protocols/-interpreter-send! this (into [::xs-init] init-payload))))
+              (protocols/-interpreter-send! this (into [::xs-init] init-payload) sync?)))
           ;; Always return self
           this))
 
@@ -124,8 +124,8 @@
                       :started? false)))
           this))
 
-      (-interpreter-send! [this event]
-        (rf/dispatch [::xs-transition-event this event])
+      (-interpreter-send! [this event sync?]
+        ((if sync? rf/dispatch-sync rf/dispatch) [::xs-transition-event this event])
         ;; Always return self
         this)
 

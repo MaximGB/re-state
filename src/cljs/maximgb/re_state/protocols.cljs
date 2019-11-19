@@ -32,11 +32,11 @@
     "Returns currently active state id.")
   (interpreter->started? ^boolean  [this]
     "Checks if interpreter has been started.")
-  (-interpreter-start! ^InterpreterProto [this event-data]
+  (-interpreter-start! ^InterpreterProto [this event-data sync?]
     "Starts machine interpretation. Registers re-frame event handlers to recieve events of the machine.")
   (interpreter-stop! ^InterpreterProto [this]
     "Stops machine interpretation. Un-registers re-frame event handlers registered at (start) call.")
-  (-interpreter-send! ^InterpreterProto [this event]
+  (-interpreter-send! ^InterpreterProto [this event sync?]
     "Sends an event to the machine via re-frame facilities. `event` is [event & payload]."))
 
 
@@ -52,11 +52,26 @@
 (defn interpreter-start!
   "Starts interpreter optionally passing addition payload for `::xs-init` event."
   [interpreter & init-payload]
-  (-interpreter-start! interpreter init-payload))
+  (-interpreter-start! interpreter init-payload false))
+
+
+(defn interpreter-sync-start!
+  "Synchroniously starts interpreter optionally passing addition payload for `::xs-init` event."
+  [interpreter & init-payload]
+  (-interpreter-start! interpreter init-payload true))
 
 
 (defn interpreter-send!
   "Sends an event to XState machine via re-frame facilities and initiates re-frame event processing using XState machine actions."
   [interpreter event & payload]
   (-interpreter-send! interpreter
-                      (into [event] payload)))
+                      (into [event] payload)
+                      false))
+
+
+(defn interpreter-sync-send!
+  "Synchroniously sends an event to XState machine via re-frame facilities and initiates re-frame event processing using XState machine actions."
+  [interpreter event & payload]
+  (-interpreter-send! interpreter
+                      (into [event] payload)
+                      true))

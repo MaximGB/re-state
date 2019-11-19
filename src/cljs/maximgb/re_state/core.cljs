@@ -4,12 +4,9 @@
   (:require [maximgb.re-state.protocols :as protocols]
             [maximgb.re-state.impl.machine :as machine]
             [maximgb.re-state.impl.interpreter :as interpreter]
-            [maximgb.re-state.impl.registry :as registry]
             [maximgb.re-state.guards :as guards]
             [maximgb.re-state.actions :as actions]
             [maximgb.re-state.utils :as utils]
-            [maximgb.re-state.co-effects :as co-effects]
-            [maximgb.re-state.effects :as effects]
             [maximgb.re-state.subscriptions :as subscriptions]
             [maximgb.re-state.services.re-state]))
 
@@ -35,7 +32,9 @@
 (def interpreter->started? protocols/interpreter->started?)
 (def interpreter-stop! protocols/interpreter-stop!)
 (def interpreter-start! protocols/interpreter-start!)
+(def interpreter-sync-start! protocols/interpreter-sync-start!)
 (def interpreter-send! protocols/interpreter-send!)
+(def interpreter-sync-send! protocols/interpreter-sync-send!)
 
 (def interpreter! interpreter/interpreter!)
 

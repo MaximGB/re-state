@@ -1,6 +1,5 @@
 (ns maximgb.re-state.actions
   (:require [maximgb.re-state.utils :as utils]
-            [maximgb.re-state.co-effects :as co-effects]
             [re-frame.core :as rf]
             [maximgb.re-state.protocols :as protocols]))
 

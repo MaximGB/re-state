@@ -291,6 +291,16 @@ and their isolated siblings
 <1> `def-guard-ev` defines a guard which will recieve only event and it's payload
 <2> `:run` event might be accompanied with `speed` parameter which guard will analyze
 
+==== Actions and guards metadata
+
+Both actions and guards can be designated not only as an id, but as a map containing action id under `:type` keyword and any other
+key/value pairs which are considered to be action or guard metadata, those key/value information is passed to guard or action
+as normal Clojure keywordized parameters.
+
+=== Nested states
+
+TODO: see tests folder for more info
+
 === Parallel states
 
 TODO: see tests folder for more info
