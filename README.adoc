@@ -31,8 +31,8 @@ Real life example can be found here: https://github.com/MaximGB/TetrisRF
 ----
 {:deps {org.clojure/clojure {:mvn/version "1.10.0"} ;; <1>
         org.clojure/clojurescript {:mvn/version "1.10.520"} ;; <2>
-        reagent/reagent {:mvn/version "0.8.1"} ;; <3>
-        re-frame/re-frame {:mvn/version "0.10.6"} ;; <4>
+        reagent/reagent {:mvn/version "0.9.0-rc2"} ;; <3>
+        re-frame/re-frame {:mvn/version "0.11.0-rc2"} ;; <4>
         maximgb.re-state {:mvn/version "0.4.0-SNAPSHOT"}}} ;; <5>
 ----
 <1>
