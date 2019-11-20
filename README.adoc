@@ -230,7 +230,34 @@ is https://maximgb.github.io/re-state/examples/entryexit/[here], compare this th
 
 ==== Action re-frame interceptors declration
 
-TODO: See tests folder for now.
+Like re-frame event handlers every action might depend on a co-effect(s), similarly like re-frame event handler, every action
+might be defined with a list of interceptors it needs. An interpreter will collect all the interceptors a transition actions
+require and inject them into re-frame event handling intercptors chain, thus providing an action with a co-effect it might need.
+
+All action definition macroses allow to provide list of interceptors needed.
+
+.Action with interceptors definition
+[source, clojure]
+----
+(def-action-fx
+  my-machine
+  :my-action
+  [(inject-cofx :my-cofx)] ;; <1>
+  (fn [cofx]
+     (let [some-cofx (:my-cofx-value cofx)]
+       {:db (assoc-in cofx [:db :my-value]
+                           (do-something-with some-cofx)))))
+----
+<1> List of co-effects an action needs
+
+Alongside with well known re-frames `(inject-cofx)` function, a keyword, symbol, string, number value or a sequence (+ vector) might
+be used to identify a co-effect an action needs.
+
+- if a keyword, symbol, string or number value is used then it's considered to be a co-effect id previously registered with `(reg-fx)`
+  function call, and it will be automatically wrapped with `(inject-cofx)`.
+- if a sequence or vector is given then its first element will be considered as co-effect id and the rest items will be used as co-effect
+  value and the sequence will be transformed into following `(inject-cofx (first s) (rest s))` call.
+
 
 ==== Guarded transitions
 
