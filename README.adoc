@@ -396,4 +396,7 @@ should be created with an interpreter provided as the first parameter
 
 ==== Predefined isolated subscribtions
 
-TODO: see tests folder for more info
+Currently there're two predefined subscriptions provided by the library:
+
+- `(isubscribe interpreter)` - subscribes to the whole interpreter isolated database section
+- `(isubscribe-state interpreter)` - subscribes to the interpreter active state value
