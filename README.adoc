@@ -306,7 +306,11 @@ as normal Clojure keywordized parameters.
 
 === Nested states
 
-TODO: see tests folder for more info
+Each state node in a machine definition can have a set of nested states under it's `:states` key. A state containing nested states
+is called compound state. If a compound state is not *_parallel_* it should have `:initial` key defined, to point out what sub state
+a machine should transit to when it transits to the parent compound state. A machine can't be just in a compound state, one (or several
+in case of a *_parallel_* state) leaf substate is always active. When machine recieves an event, it's handling goes from leaf states up.
+If leaf state doesn't have transition for an event then a transition will be searched in parent state up and so on.
 
 === Parallel states
 
