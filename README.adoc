@@ -334,7 +334,7 @@ For the time being please see more information https://xstate.js.org/docs/guides
 
 === History states
 
-History states allow a statemachine to transit to last active compound state child state without explicitly naming it in transition.
+History states allow a statechart to transit to last active compound state child state without explicitly naming it in transition.
 
 [TIP]
 ====
@@ -343,12 +343,55 @@ For the time being please see more information https://xstate.js.org/docs/guides
 
 === Component isolation
 
-TODO: see tests folder for more info
+The library brings another useful feature which allows to "isolate" component data model and write a component in a way is if
+it's the only one and doesn't share the application database with other components.
+
+*To use the feature a code have to be written correspondingly*:
+- statechart guards and action should be defined with isolated versions of guards/action definition macros
+- component view should use re-frame subscribtions defined with `(reg-isub)` function from the library.
+
+==== Isolated actions and guards
+
+Every statechart interpreter is created with an automaticaly generated and application unique path, which, if needed, can be provided
+by a user explicitly (as the first argument to `(interpreter!)` function). This path is used to access a section of an re-frame's
+application database to store component data into and retrieve component data from.
+
+Both statechart actions and guards can be defined as isolated using following macros:
+- `(def-guard-idb)`
+- `(def-guard-ifx)`
+- `(def-guard-ictx)`
+- `(def-action-idb)`
+- `(def-action-ifx)`
+- `(def-action-ictx)`
+
+The statechart interpreter will access a corresponding application database section and substitute the whole database map in re-frame's
+event handling context with just the part of it before executing a guard or action. Thus the handlers will transparently get access
+to the correct database section still working with it as if they work with entire database.
 
 ==== Isolated subscriptions
 
-TODO: see tests folder for more info
+To create a subscription to an statechart interpreter isolated application database section one should use `(reg-isub)` function.
+The function recieves the same parameters is normal re-frame's `(reg-sub)`, the only difference is that reactions for such subscription
+should be created with an interpreter provided as the first parameter
 
-==== Machine state subscription
+.Isolated subscription creation example
+[source, clojure]
+----
+(reg-isub
+  :my-sub
+  (fn [db]
+    (:my-key db)))
+----
+
+.Isolated reaction creation example
+[source, clojure]
+----
+(defn my-comp []
+  (let [controller (interpreter-start! (interpreter! my-machine))
+    my-sub (subscribe [:my-sub controller])]
+    [:div @my-sub]))
+----
+
+==== Predefined isolated subscribtions
 
 TODO: see tests folder for more info
