@@ -312,9 +312,21 @@ a machine should transit to when it transits to the parent compound state. A mac
 in case of a *_parallel_* state) leaf substate is always active. When machine recieves an event, it's handling goes from leaf states up.
 If leaf state doesn't have transition for an event then a transition will be searched in parent state up and so on.
 
+[TIP]
+====
+For the time being please see more information https://xstate.js.org/docs/guides/hierarchical.html[at the XState library documentation].
+====
+
 === Parallel states
 
-TODO: see tests folder for more info
+A parallel state node is designated by `:type` key which should contain `:parallel` value. Leaf state nodes of a parallel compound state
+a active simultaneously, as well as they might transition simultaneously if they contain a valid transition for an event being recieved by
+a machine.
+
+[TIP]
+====
+For the time being please see more information https://xstate.js.org/docs/guides/parallel.html[at the XState library documentation].
+====
 
 === Component isolation
 
