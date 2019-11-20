@@ -2,8 +2,7 @@
         org.clojure/clojurescript {:mvn/version "1.10.520" :scope "provided"}
         reagent/reagent {:mvn/version "0.9.0-rc2" :scope "provided"}
         re-frame/re-frame {:mvn/version "0.11.0-rc2" :scope "provided"}
-        com.rpl/specter {:mvn/version "1.1.2"}
-        maximgb/re-service {:mvn/version "1.0.4"}}
+        com.rpl/specter {:mvn/version "1.1.2"}}
 
  :paths ["src/cljs"]
 

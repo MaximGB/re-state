@@ -7,8 +7,7 @@
             [maximgb.re-state.guards :as guards]
             [maximgb.re-state.actions :as actions]
             [maximgb.re-state.utils :as utils]
-            [maximgb.re-state.subscriptions :as subscriptions]
-            [maximgb.re-state.services.re-state]))
+            [maximgb.re-state.subscriptions :as subscriptions]))
 
 (def machine->config protocols/machine->config)
 (def machine->options protocols/machine->options)
@@ -56,5 +55,3 @@
 (def reg-isub subscriptions/reg-isub)
 (def isubscribe subscriptions/isubscribe)
 (def isubscribe-state subscriptions/isubscribe-state)
-
-(def re-state-service ::re-state)

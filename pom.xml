@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>maximgb</groupId>
   <artifactId>re-state</artifactId>
-  <version>0.4.0-SNAPSHOT</version>
+  <version>1.0.0</version>
   <name>re-state</name>
   <description>Re-frame supplimentary library which routes dispatched events via statecharts implementing final state machines.</description>
 
@@ -57,11 +57,6 @@
       <groupId>com.rpl</groupId>
       <artifactId>specter</artifactId>
       <version>1.1.2</version>
-    </dependency>
-    <dependency>
-      <groupId>maximgb</groupId>
-      <artifactId>re-service</artifactId>
-      <version>1.0.4</version>
     </dependency>
   </dependencies>
 
