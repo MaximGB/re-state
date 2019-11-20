@@ -114,6 +114,37 @@
                (done))))))
 
 
+(deftest history-state-test
+  (testing "History state support"
+    (async done
+           (let [c (casync/timeout 100)
+                 m (machine {:id :history-machine
+                             :initial :ready
+                             :states {:ready {:initial :one
+                                              :on      {:run :running}
+                                              :states  {:one  {:entry #(casync/put! c :ready.one)
+                                                               :on {:to-two :two}}
+                                                        :two  {:entry #(casync/put! c :ready.two)
+                                                               :on {:to-one :one}}
+                                                        :hist {:type    :history
+                                                               :history :shallow}}}
+
+                                      :running {:entry #(casync/put! c :running)
+                                                :on {:stop :ready.hist}}}})
+                 i (interpreter! m)
+                 s (isubscribe-state i)]
+             (casync/go
+               (interpreter-start! i)
+               (is (= (casync/<! c) :ready.one) "Entered :ready.one state")
+               (interpreter-send! i :to-two)
+               (is (= (casync/<! c) :ready.two) "Entered :ready.two state")
+               (interpreter-send! i :run)
+               (is (= (casync/<! c) :running) "Entered :running state")
+               (interpreter-send! i :stop)
+               (is (= (casync/<! c) :ready.two) "Entered :ready.two via :ready.hist history state")
+               (done))))))
+
+
 (deftest interceptors-given-as-sequences-test
   (testing "Interceptors handling given as sequences or vectors"
     #_TODO))
