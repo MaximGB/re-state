@@ -157,10 +157,11 @@
   "Creates XState based interpreter which uses re-frame facilities to send/receive and handle events"
 
   ([machine]
-   (interpreter! (gensym ::instance) machine))
+   (interpreter! nil machine))
 
   ([path machine]
-   (interpreter- (if (seqable? path)
-                   path
-                   [path])
-                 machine)))
+   (let [valid-path (or path (gensym ::instance))]
+     (interpreter- (if (seqable? valid-path)
+                     valid-path
+                     [valid-path])
+                   machine))))

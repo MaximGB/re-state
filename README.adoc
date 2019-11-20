@@ -351,6 +351,11 @@ To use the feature a code have to be written correspondingly:
 - statechart guards and action should be defined with isolated versions of guards/action definition macros
 - component view should use re-frame subscribtions defined with `(reg-isub)` function from the library.
 
+[NOTE]
+====
+An update gauge example which shows isolation feature in action is https://maximgb.github.io/re-state/examples/isolation/[here]
+====
+
 ==== Isolated actions and guards
 
 Every statechart interpreter is created with an automaticaly generated and application unique path, which, if needed, can be provided

@@ -1,4 +1,4 @@
-(ns ^:figwheel-hooks maximgb.re-state.example.gauge
+(ns maximgb.re-state.example.isolation
   (:import  [goog.events BrowserEvent]
             [goog.dom DomHelper])
   (:require [goog.style :as gstyle]
@@ -155,8 +155,8 @@
    (:val db)))
 
 
-(defn gauge-component [& {:keys [min max val drag-threshold]}]
-  (let [controller (rs/interpreter-sync-start! (rs/interpreter! gauge-component-machine)
+(defn gauge-component [& {:keys [path min max val drag-threshold]}]
+  (let [controller (rs/interpreter-sync-start! (rs/interpreter! path gauge-component-machine)
                                                :min min
                                                :max max
                                                :val val
@@ -199,8 +199,10 @@
 
 (defn ^:after-load -main []
   (reagent/render [:div
-                   "Drag & drop the red thumb to change the value."
-                   [gauge-component]]
+                   "Drag & drop the red thumb to change a component value value."
+                   [gauge-component :min 0 :max 100 :val 0]
+                   [gauge-component :min 0 :max 100 :val 100]
+                   [gauge-component :min 0 :max 100 :val 50]]
                   (.getElementById js/document "app")))
 
 

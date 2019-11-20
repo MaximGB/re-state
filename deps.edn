@@ -41,13 +41,11 @@
                                             "-o"  "docs/examples/basic/prod-main.js"
                                             "-c"  "maximgb.re-state.example.basic"]}
 
-
            :example-actions    {:main-opts ["-m"  "figwheel.main"
                                             "-co" "example.cljs.edn"
                                             "-O"  "advanced"
                                             "-o"  "docs/examples/actions/prod-main.js"
                                             "-c"  "maximgb.re-state.example.actions"]}
-
 
            :example-entry-exit {:main-opts ["-m"  "figwheel.main"
                                             "-co" "example.cljs.edn"
@@ -59,4 +57,10 @@
                                             "-co" "example.cljs.edn"
                                             "-O"  "advanced"
                                             "-o"  "docs/examples/gauge/prod-main.js"
-                                            "-c"  "maximgb.re-state.example.gauge"]}}}
+                                            "-c"  "maximgb.re-state.example.gauge"]}
+
+           :example-isolation  {:main-opts ["-m"  "figwheel.main"
+                                            "-co" "example.cljs.edn"
+                                            "-O"  "advanced"
+                                            "-o"  "docs/examples/isolation/prod-main.js"
+                                            "-c"  "maximgb.re-state.example.isolation"]}}}
