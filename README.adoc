@@ -338,7 +338,7 @@ History states allow a statemachine to transit to last active compound state chi
 
 [TIP]
 ====
-For the time being please see more information https://xstate.js.org/docs/guides/parallel.html[at the XState library documentation].
+For the time being please see more information https://xstate.js.org/docs/guides/history.html[at the XState library documentation].
 ====
 
 === Component isolation
