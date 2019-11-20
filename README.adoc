@@ -346,7 +346,8 @@ For the time being please see more information https://xstate.js.org/docs/guides
 The library brings another useful feature which allows to "isolate" component data model and write a component in a way is if
 it's the only one and doesn't share the application database with other components.
 
-*To use the feature a code have to be written correspondingly*:
+To use the feature a code have to be written correspondingly:
+
 - statechart guards and action should be defined with isolated versions of guards/action definition macros
 - component view should use re-frame subscribtions defined with `(reg-isub)` function from the library.
 
