@@ -357,6 +357,7 @@ by a user explicitly (as the first argument to `(interpreter!)` function). This 
 application database to store component data into and retrieve component data from.
 
 Both statechart actions and guards can be defined as isolated using following macros:
+
 - `(def-guard-idb)`
 - `(def-guard-ifx)`
 - `(def-guard-ictx)`
