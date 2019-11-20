@@ -224,7 +224,7 @@ When machine enters to or exits from a state it might execute entry and exit act
 
 [NOTE]
 ====
-An updated traffic light example which uses entry / exit action live demo
+The updated traffic light example which uses entry / exit action live demo
 is https://maximgb.github.io/re-state/examples/entryexit/[here], compare this the previous one.
 ====
 
@@ -353,7 +353,7 @@ To use the feature a code have to be written correspondingly:
 
 [NOTE]
 ====
-An update gauge example which shows isolation feature in action is https://maximgb.github.io/re-state/examples/isolation/[here]
+The updated gauge example which shows isolation feature in action is https://maximgb.github.io/re-state/examples/isolation/[here]
 ====
 
 ==== Isolated actions and guards
