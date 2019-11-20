@@ -228,6 +228,10 @@ An updated traffic light example which uses entry / exit action live demo
 is https://maximgb.github.io/re-state/examples/entryexit/[here], compare this the previous one.
 ====
 
+==== Action re-frame interceptors declration
+
+TODO: See tests folder for now.
+
 ==== Guarded transitions
 
 Guarded transitions allow you to transit to differen states depending on some condition. One can analyze event accompanying data
@@ -322,6 +326,15 @@ For the time being please see more information https://xstate.js.org/docs/guides
 A parallel state node is designated by `:type` key which should contain `:parallel` value. Leaf state nodes of a parallel compound state
 a active simultaneously, as well as they might transition simultaneously if they contain a valid transition for an event being recieved by
 a machine.
+
+[TIP]
+====
+For the time being please see more information https://xstate.js.org/docs/guides/parallel.html[at the XState library documentation].
+====
+
+=== History states
+
+History states allow a statemachine to transit to last active compound state child state without explicitly naming it in transition.
 
 [TIP]
 ====
