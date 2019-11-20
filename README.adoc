@@ -255,7 +255,7 @@ be used to identify a co-effect an action needs.
 
 - if a keyword, symbol, string or number value is used then it's considered to be a co-effect id previously registered with `(reg-fx)`
   function call, and it will be automatically wrapped with `(inject-cofx)`.
-- if a sequence or vector is given then its first element will be considered as co-effect id and the rest items will be used as co-effect
+- if a sequence or vector is given then its first item is considered to be co-effect id and the rest items will be used as co-effect
   value and the sequence will be transformed into following `(inject-cofx (first s) (rest s))` call.
 
 
