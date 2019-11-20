@@ -120,19 +120,18 @@
            (let [c (casync/timeout 100)
                  m (machine {:id :history-machine
                              :initial :ready
-                             :states {:ready {:initial :one
-                                              :on      {:run :running}
-                                              :states  {:one  {:entry #(casync/put! c :ready.one)
-                                                               :on {:to-two :two}}
-                                                        :two  {:entry #(casync/put! c :ready.two)
-                                                               :on {:to-one :one}}
-                                                        :hist {:type    :history
-                                                               :history :shallow}}}
+                             :states {:ready   {:initial :one
+                                                :on      {:run :running}
+                                                :states  {:one  {:entry #(casync/put! c :ready.one)
+                                                                 :on {:to-two :two}}
+                                                          :two  {:entry #(casync/put! c :ready.two)
+                                                                 :on {:to-one :one}}
+                                                          :hist {:type    :history
+                                                                 :history :shallow}}}
 
                                       :running {:entry #(casync/put! c :running)
-                                                :on {:stop :ready.hist}}}})
-                 i (interpreter! m)
-                 s (isubscribe-state i)]
+                                                :on    {:stop :ready.hist}}}})
+                 i (interpreter! m)]
              (casync/go
                (interpreter-start! i)
                (is (= (casync/<! c) :ready.one) "Entered :ready.one state")
