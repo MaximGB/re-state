@@ -1,6 +1,7 @@
 ^{:watch-dirs ["examples/src"]}
 {:source-map false
  :npm-deps false
+ :parallel-build true
  :foreign-libs [{:file "target/public/js-out/xstate_bundle.js"
                  :file-min "target/public/js-out/xstate_bundle.min.js"
                  :provides ["xstate"]

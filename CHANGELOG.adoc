@@ -8,5 +8,8 @@ ifdef::env-github[]
 :warning-caption: :warning
 endif::[]
 
+== 1.1.0
+- Service to control other machines via re-frame co/effects included back (it was removed before 1.0.0 release)
+
 == 1.0.0
 - First stable release
