@@ -1,4 +1,4 @@
-^{:watch-dirs ["src" "test" "examples/src"]
+^{:watch-dirs ["src/cljs" "test" "examples/src"]
   :css-dirs ["resources/public"]
   :auto-testing true
   :extra-main-files {:basic-example {:main maximgb.re-state.example.basic}

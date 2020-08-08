@@ -310,14 +310,14 @@ and their isolated siblings
 (def-guard-ev ;; <1>
   my-machine
   :slow?
-  [event speed] ;; <2>
-  (and speed (< speed 7)))
+  (fn [event speed] ;; <2>
+    (and speed (< speed 7))))
 
 (def-guard-ev
   my-machine
   :fast
-  [event speed]
-  (and speed (> speed 7))
+  (fn [event speed]
+    (and speed (> speed 7)))
 ----
 <1> `def-guard-ev` defines a guard which will recieve only event and it's payload
 <2> `:run` event might be accompanied with `speed` parameter which guard will analyze

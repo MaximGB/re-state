@@ -3,13 +3,14 @@
             [cljs.core.async :as casync]
             [re-frame.core :as rf]
             [maximgb.re-state.core :as xs :refer [machine
-                                                 init-event
-                                                 db-action
-                                                 interpreter!
-                                                 interpreter-start!
-                                                 interpreter-stop!
-                                                 interpreter-send!
-                                                 isubscribe-state]]))
+                                                  init-event
+                                                  db-action
+                                                  fx-action
+                                                  interpreter!
+                                                  interpreter-start!
+                                                  interpreter-stop!
+                                                  interpreter-send!
+                                                  isubscribe-state]]))
 
 (def rf-checkpoint (volatile! nil))
 
@@ -146,4 +147,23 @@
 
 (deftest interceptors-given-as-sequences-test
   (testing "Interceptors handling given as sequences or vectors"
-    #_TODO))
+    (async done
+           (let [c (casync/timeout 100)
+                 m (machine {:id      :basic-machine
+                             :initial :ready
+                             :states {:ready {:entry :on-ready}}}
+
+                            {:actions {:on-ready (fx-action [[::v-interceptor c]]
+                                                            (fn [cofx]
+                                                              (casync/put! (::v-interceptor cofx) :ok)))}})
+                 i (interpreter! m)]
+
+             (rf/reg-cofx
+              ::v-interceptor
+              (fn [cofx [c]]
+                (assoc cofx ::v-interceptor c)))
+
+             (casync/go
+               (interpreter-start! i)
+               (is (= (casync/<! c) :ok) "Interceptor given as a vector has been called.")
+               (done))))))
