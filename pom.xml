@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>maximgb</groupId>
   <artifactId>re-state</artifactId>
-  <version>1.1.0</version>
+  <version>1.2.0</version>
   <name>re-state</name>
   <description>Re-frame supplimentary library which routes dispatched events via statecharts implementing final state machines.</description>
 
