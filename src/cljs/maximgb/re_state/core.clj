@@ -112,3 +112,8 @@
 
   [var-name id guard-fn]
   `(machine-add-guard! ~var-name ~id (ictx-guard ~guard-fn)))
+
+(defmacro def-ex-activity
+  "Adds activity with given `id` and handler function `activity-fn` to the machine defined by `var-name`."
+  [var-name id activity-fn]
+  `(machine-add-activity! ~var-name ~id (ex-activity ~activity-fn)))

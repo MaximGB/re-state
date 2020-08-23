@@ -268,8 +268,8 @@
                (rf/dispatch [::idb-action-test])
                (let [app-db (casync/<! c)]
                  (is (and
-                      (= (get-in app-db [::i1 :val]) 1)
-                      (= (get-in app-db [::i2 :val]) 2))
+                      (= (get-in app-db [::i1 :db :val]) 1)
+                      (= (get-in app-db [::i2 :db :val]) 2))
                      "IDB action data isolation works correctly"))
                (done))))))
 
@@ -301,8 +301,8 @@
                (rf/dispatch [::idb-action-test])
                (let [app-db (casync/<! c)]
                  (is (and
-                      (= (get-in app-db [::i1 :val]) 1)
-                      (= (get-in app-db [::i2 :val]) 2))
+                      (= (get-in app-db [::i1 :db :val]) 1)
+                      (= (get-in app-db [::i2 :db :val]) 2))
                      "IFX action data isolation works correctly"))
                (done))))))
 
@@ -336,8 +336,8 @@
                (rf/dispatch [::idb-action-test])
                (let [app-db (casync/<! c)]
                  (is (and
-                      (= (get-in app-db [::i1 :val]) 1)
-                      (= (get-in app-db [::i2 :val]) 2))
+                      (= (get-in app-db [::i1 :db :val]) 1)
+                      (= (get-in app-db [::i2 :db :val]) 2))
                      "ICTX action data isolation works correctly"))
                (done))))))
 
@@ -384,10 +384,10 @@
                (interpreter-start! i)
                (rf/dispatch [::check])
                (let [db (casync/<! c)]
-                 (is (= (get-in db [::a :a1]) :a1) "1st action db changed applied")
-                 (is (= (get-in db [::a :a2]) :a2) "2nd action db changed applied")
-                 (is (= (get-in db [::a :a3]) :a3) "3rd action db changed applied")
-                 (is (= (get-in db [::a :a4]) :a4) "4th action db changed applied")
-                 (is (= (get-in db [::a :a5]) :a5) "5th action db changed applied")
-                 (is (= (get-in db [::a :a6]) :a6) "6th action db changed applied"))
+                 (is (= (get-in db [::a :db :a1]) :a1) "1st action db changed applied")
+                 (is (= (get-in db [::a :db :a2]) :a2) "2nd action db changed applied")
+                 (is (= (get-in db [::a :db :a3]) :a3) "3rd action db changed applied")
+                 (is (= (get-in db [::a :db :a4]) :a4) "4th action db changed applied")
+                 (is (= (get-in db [::a :db :a5]) :a5) "5th action db changed applied")
+                 (is (= (get-in db [::a :db :a6]) :a6) "6th action db changed applied"))
                (done))))))

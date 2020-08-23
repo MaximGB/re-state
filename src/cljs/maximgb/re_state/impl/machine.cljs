@@ -26,10 +26,10 @@
   protocols/MachineProto
 
   (machine->config [this]
-    (:config this))
+    config)
 
   (machine->options [this]
-    (:options this))
+    options)
 
   (-machine->interceptors [this]
     (let [config (protocols/machine->config this)
@@ -109,3 +109,11 @@
   (machine<-options *machine
                     (fn [options]
                       (assoc-in options [:guards id] guard-fn))))
+
+
+(defn machine-add-activity!
+  "Adds an activity with `id` to machine options"
+  [*machine id activity-fn]
+  (machine<-options *machine
+                    (fn [options]
+                      (assoc-in options [:activities id] activity-fn))))

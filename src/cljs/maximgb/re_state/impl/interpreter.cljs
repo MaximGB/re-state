@@ -6,16 +6,38 @@
             [xstate :as xs]))
 
 
+(defmulti execute-action
+  "Executes X-State action.
+
+   Each action is given as js-object with `exec` or `type` property. The method analyzes `type` first and then fallbacks to `exec`
+   if `type` is unknown or not given and `exec` is defined. If none is given method returns first argument which is re-frame context."
+  (fn [_re-ctx action]
+    (aget "type" action)))
+
+
+(defmethod execute-action
+  :default
+  [re-ctx action]
+  (let [exec (or (aget action "exec") identity)
+        result (exec re-ctx action)]
+    (if (map? result)
+      result
+      re-ctx)))
+
+
 (defn- execute-transition-actions
-  "Executes given `actions` in re-frame context `re-ctx`."
+  "Executes given `actions` in re-frame context `re-ctx`.
+
+   Each action recieves `re-ctx` as the only argument and should return ether something `map?` like, which is considered
+   to be updated `re-ctx`, which, in it's turn will be passed to the next action. Or action return nothing, which means
+   that it hasn't added any modifications to the `re-ctx` and the next action will recieve unaltered context.
+
+   Actions here are not those function a re-state user defines, this actions are wrappers around user's actions. This wrappers
+   adopt `re-ctx` to the kind of argument user's action expects. This might be: db, cofx map, re-ctx."
   [re-ctx actions]
   (areduce actions idx ret re-ctx
-           (let [action (aget actions idx)
-                 exec (or (aget action "exec") identity)
-                 action-result (exec ret action)]
-             (if (map? action-result)
-               action-result
-               ret))))
+           (let [action (aget actions idx)]
+             (execute-action ret action))))
 
 
 (defn- machine-actions->interceptors
@@ -38,7 +60,7 @@
 
 
 ;; Re-frame interceptor executing state transition actions
-(def exec-interceptor
+(def actions-exec-interceptor
   (rf/->interceptor
    :id ::xs-actions-exec-interceptor
    :before (fn [re-ctx]
@@ -61,11 +83,11 @@
                  ;; If isolated interpreter db part allows associtiation by keyword
                  (let [interpreter-state (protocols/interpreter->state interpreter)
                        new-db (assoc-in db
-                                        (conj interpreter-path :maximgb.re-state.core/state)
+                                        (conj interpreter-path :state)
                                         (.-value ^js/XState.State interpreter-state))]
                    (-> re-ctx
-                       (rf/assoc-coeffect #_re-ctx :db new-db)
-                       (rf/assoc-effect #_re-ctx :db new-db)))
+                       (rf/assoc-coeffect :db new-db)
+                       (rf/assoc-effect :db new-db)))
                  ;; Else if we can't store state just returning re-ctx un-altered
                  re-ctx)))))
 
@@ -103,14 +125,13 @@
 
       (-interpreter-start! [this init-payload sync?]
         (let [started? (protocols/interpreter->started? this)]
-          (if-not started?
+          (when-not started?
             ;; Starting
-            (do
-              (vswap! *interpreter
-                      assoc
-                      :started? true)
-              ;; Dispatching self-initialization event to transit to machine initial state
-              (protocols/-interpreter-send! this (into [::xs-init] init-payload) sync?)))
+            (vswap! *interpreter
+                    assoc
+                    :started? true)
+            ;; Dispatching self-initialization event to transit to machine initial state
+            (protocols/-interpreter-send! this (into [::xs-init] init-payload) sync?))
           ;; Always return self
           this))
 
@@ -147,10 +168,13 @@
                                                                                      re-ctx)))
               actions (.-actions xs-new-state)
               interceptors (machine-actions->interceptors machine actions)]
+          (prn "Transiting " xs-event-type)
           (vswap! *interpreter
                   assoc
                   :state xs-new-state)
-          (rf/enqueue re-ctx (conj interceptors store-state-interceptor exec-interceptor)))))))
+          (rf/enqueue re-ctx (conj interceptors
+                                   store-state-interceptor
+                                   actions-exec-interceptor)))))))
 
 
 (defn interpreter!

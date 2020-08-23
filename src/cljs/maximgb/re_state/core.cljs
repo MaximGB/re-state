@@ -6,6 +6,7 @@
             [maximgb.re-state.impl.interpreter :as interpreter]
             [maximgb.re-state.guards :as guards]
             [maximgb.re-state.actions :as actions]
+            [maximgb.re-state.activities :as activities]
             [maximgb.re-state.utils :as utils]
             [maximgb.re-state.subscriptions :as subscriptions]
             [maximgb.re-state.services.re-state :as re-state-service]))
@@ -23,6 +24,7 @@
 (def machine! machine/machine!)
 (def machine-add-guard! machine/machine-add-guard!)
 (def machine-add-action! machine/machine-add-action!)
+(def machine-add-activity! machine/machine-add-activity!)
 
 (def init-event ::interpreter/xs-init)
 
@@ -58,3 +60,6 @@
 (def isubscribe-state subscriptions/isubscribe-state)
 
 (def re-state-service ::re-state)
+
+;; Experimental
+(def ex-activity activities/ex-activity)

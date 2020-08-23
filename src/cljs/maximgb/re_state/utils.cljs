@@ -101,7 +101,7 @@
                      (if-not bare?
                        (map (fn [interceptor]
                               (cond
-                                ;; Signle keyword/symbol/string/number is considered as interceptor id
+                                ;; Single keyword/symbol/string/number is considered as interceptor id
                                 (or (keyword? interceptor) (symbol? interceptor) (string? interceptor) (number? interceptor))
                                 (rf/inject-cofx interceptor)
                                 ;; Sequence or vector is considered as co-effect id & rest params
@@ -117,7 +117,7 @@
 
 
 (defn machine-config->actions-interceptors
-  "Extracts interceptros metadata from actions given in machine configuration.
+  "Extracts interceptors metadata from actions given in machine configuration.
 
    Returns a map with original action functions as keys and handlers' metadata as value,
    such that it can be easily looked up during runtime."
@@ -154,7 +154,7 @@
 
 
 (defn with-re-ctx-db-isolated
-  "Calls `inner-fn` having isolated re-frame's context :db co-effect/effect using provided `path`, returns updated context with :db unisolated.
+  "Calls `inner-fn` having isolated re-frame's context `:db` co-effect/effect using provided `path`, returns updated context with `:db` unisolated.
 
    `inner-fn` is called as (inner-fn new-re-ctx & inner-args)."
   [re-ctx path inner-fn & inner-args]
@@ -164,8 +164,8 @@
         idb (get-in udb path)
         ;; Changing :db coeffect/effect to hold isolated db
         ictx (-> re-ctx
-                 (rf/assoc-coeffect #_re-ctx :db idb)
-                 (rf/assoc-effect #_re-ctx :db idb))
+                 (rf/assoc-coeffect :db idb)
+                 (rf/assoc-effect :db idb))
         ;; Calling handler, recieving new context with isolated :db coeffect and possible db changes in :db effect
         new-ictx (apply inner-fn ictx inner-args) ;; <! - HANDLER CALL
         ;; Getting new isolated db part

@@ -3,6 +3,10 @@
             [re-frame.core :as rf]
             [maximgb.re-state.protocols :as protocols]))
 
+(defn- make-interpreter-isolated-db-path
+  [path]
+  (conj path :db))
+
 (defn- db-action->re-ctx-handler
   [handler]
   (fn [re-ctx js-meta]
@@ -51,11 +55,10 @@
          (let [interpreter (utils/re-ctx->*interpreter re-ctx)
                interpreter-path (protocols/interpreter->path interpreter)]
            (utils/with-re-ctx-db-isolated re-ctx
-                                          interpreter-path
+                                          (make-interpreter-isolated-db-path interpreter-path)
                                           db-handler
                                           js-meta)))
        {:maximgb.re-state.core/xs-interceptors interceptors}))))
-
 
 
 (defn- fx-action->re-ctx-handler
@@ -115,7 +118,7 @@
          (let [interpreter (utils/re-ctx->*interpreter re-ctx)
                interpreter-path (protocols/interpreter->path interpreter)]
            (utils/with-re-ctx-db-isolated re-ctx
-                                          interpreter-path
+                                          (make-interpreter-isolated-db-path interpreter-path)
                                           fx-handler
                                           js-meta)))
        {:maximgb.re-state.core/xs-interceptors interceptors}))))
@@ -163,7 +166,7 @@
          (let [interpreter (utils/re-ctx->*interpreter re-ctx)
                interpreter-path (protocols/interpreter->path interpreter)]
            (utils/with-re-ctx-db-isolated re-ctx
-                                          interpreter-path
+                                          (make-interpreter-isolated-db-path interpreter-path)
                                           ctx-handler
                                           js-meta)))
        {:maximgb.re-state.core/xs-interceptors interceptors}))))

@@ -35,7 +35,7 @@
 (reg-isub
  :maximgb.re-state.core/sub-interpreter-state
  (fn [idb [_ _ keywordize?]]
-   (let [state (:maximgb.re-state.core/state idb)]
+   (let [state (:state idb)]
      (cond
        (and (string? state) keywordize?)
        (keyword state)
