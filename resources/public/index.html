@@ -47,9 +47,9 @@
         </div>
 
         <script>
-         var mainScriptUrl = "cljs-out/dev-main";
+         let mainScriptUrl = "cljs-out/dev-main";
 
-         var example = location.href.split('?').pop();
+         let [base, example] = location.href.split('?');
 
          if (example) {
              mainScriptUrl += '-' + example;
