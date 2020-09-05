@@ -9,7 +9,8 @@
             [maximgb.re-state.activities :as activities]
             [maximgb.re-state.utils :as utils]
             [maximgb.re-state.subscriptions :as subscriptions]
-            [maximgb.re-state.services.re-state :as re-state-service]))
+            [maximgb.re-state.services.re-state :as re-state-service]
+            [maximgb.re-state.services.spawn :as spawn-service]))
 
 (def machine->config protocols/machine->config)
 (def machine->options protocols/machine->options)
@@ -55,11 +56,17 @@
 (def ifx-guard guards/ifx-guard)
 (def ictx-guard guards/ictx-guard)
 
+(def ev-activity activities/ev-activity)
+(def db-activity activities/db-activity)
+(def idb-activity activities/idb-activity)
+(def fx-activity activities/fx-activity)
+(def ifx-activity activities/ifx-activity)
+(def ctx-activity activities/ctx-activity)
+(def ictx-activity activities/ictx-activity)
+
 (def reg-isub subscriptions/reg-isub)
 (def isubscribe subscriptions/isubscribe)
 (def isubscribe-state subscriptions/isubscribe-state)
 
 (def re-state-service ::re-state)
-
-;; Experimental
-(def ex-activity activities/ex-activity)
+(def spawn-service ::spawn)

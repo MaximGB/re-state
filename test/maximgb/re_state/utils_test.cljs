@@ -1,15 +1,16 @@
 (ns maximgb.re-state.utils-test
   (:require [cljs.test :refer [deftest is testing async use-fixtures]]
             [goog.object :as gobject]
-            [maximgb.re-state.core :refer [db-action]]
+            [maximgb.re-state.core :refer [db-action ev-activity]]
             [maximgb.re-state.utils :refer [prepare-machine-config
-                                           prepare-machine-options
-                                           meta-actions->interceptors-map
-                                           machine-config->actions-interceptors
-                                           machine-options->actions-interceptors
-                                           js-meta->kv-argv
-                                           call-with-re-ctx-db-isolated
-                                           with-re-ctx-db-isolated]]))
+                                            prepare-machine-options
+                                            meta-handlers->interceptors-map
+                                            machine-config->actions-interceptors
+                                            machine-options->actions-interceptors
+                                            machine-options->activities-interceptors
+                                            js-meta->kv-argv
+                                            call-with-re-ctx-db-isolated
+                                            with-re-ctx-db-isolated]]))
 
 
 (def test-machine-config {:id :test-2
@@ -36,16 +37,19 @@
                                                 (fn [db]))
                                      :action-2 (db-action
                                                 [:test-coeffect-1 :test-coeffect-2]
-                                                (fn [db]))}})
+                                                (fn [db]))}
+                           :activities {:activity-1 (ev-activity
+                                                     [:test-coeffect-3]
+                                                     (fn [ev]))}})
 
 
-(deftest meta-actions-to-interceptors-map-test
+(deftest meta-handlers-to-interceptors-map-test
   (testing "Interceptors extractions from meta actions sequence"
     (let [a-fn (fn [])
           b-c-fn (fn [])
           actions [(with-meta a-fn {:maximgb.re-state.core/xs-interceptors [:a]})
                    (with-meta b-c-fn {:maximgb.re-state.core/xs-interceptors [:b :c]})]
-          interceptors (meta-actions->interceptors-map actions)]
+          interceptors (meta-handlers->interceptors-map actions)]
       (is (= (get interceptors a-fn) [:a]) "A-fn interceptors are extracted correctly")
       (is (= (get interceptors b-c-fn) [:b :c]) "B-C-fn interceptors are extracted correctly"))))
 
@@ -60,7 +64,7 @@
       (is (= interceptors #{:test-coeffect-1 :test-coeffect-2 :test-coeffect-3 :test-coeffect-4}) "Config actions interceptors collected"))))
 
 
-(deftest machine-options-interceptors-extraction-test
+(deftest machine-options-actions-interceptors-extraction-test
   (testing "Actions interceptors extranction from machine options"
     (let [meta (machine-options->actions-interceptors test-machine-options)
           interceptors (into #{} (flatten (vals meta)))
@@ -68,6 +72,16 @@
       (doseq [f fns]
         (is (instance? js/Function f) "All meta keys are normal JS functions"))
       (is (= interceptors #{:test-coeffect-1 :test-coeffect-2}) "Options actions interceptors collected"))))
+
+
+(deftest machine-options-activities-interceptors-extraction-test
+  (testing "Activities interceptors extranction from machine options"
+    (let [meta (machine-options->activities-interceptors test-machine-options)
+          interceptors (into #{} (flatten (vals meta)))
+          fns (keys meta)]
+      (doseq [f fns]
+        (is (instance? js/Function f) "All meta keys are normal JS functions"))
+      (is (= interceptors #{:test-coeffect-3}) "Options activities interceptors collected"))))
 
 
 (deftest prepare-machine-config-test

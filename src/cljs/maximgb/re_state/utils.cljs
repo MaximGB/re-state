@@ -9,11 +9,17 @@
   (and s (seqable? s) (not (map? s))))
 
 
+(defn cofx->interpreter
+  "Gets interpreter instance from re-frame `:event` co-effect."
+  [cofx]
+  (let [[_ interpreter] (:event cofx)]
+    interpreter))
+
+
 (defn re-ctx->*interpreter
   "Gets interpreter instance from re-frame context's `:event` co-effect."
   [re-ctx]
-  (let [[_ interpreter] (rf/get-coeffect re-ctx :event)]
-    interpreter))
+  (cofx->interpreter (rf/get-coeffect re-ctx)))
 
 
 (defn re-ctx->xs-event
@@ -29,11 +35,20 @@
   (first (re-ctx->xs-event re-ctx)))
 
 
-(defn cofx->interpreter
-  "Gets interpreter instance from re-frame `:event` co-effect."
-  [cofx]
-  (let [[_ interpreter] (:event cofx)]
-    interpreter))
+(defn interpreter->isolated-db-path
+  "Gets isolated interpreter path in the re-frame database"
+  [interpreter]
+  (-> interpreter
+      (protocols/interpreter->path)
+      (conj :db)))
+
+
+(defn re-ctx->interpreter-isolated-db-path
+  "Gets isolated interpreter path in the re-frame database for the interpreter sent event in re-frame context."
+  [re-ctx]
+  (-> re-ctx
+      (re-ctx->*interpreter)
+      (interpreter->isolated-db-path)))
 
 
 (defn js-meta->kv-argv
@@ -43,6 +58,12 @@
       (seq)
       (flatten)
       (into [])))
+
+
+(defn meta-fn->js-fn
+  "Extracts JavaScript callable function from ClojureScript only callable MetaFn object"
+  [meta-fn]
+  (.-afn meta-fn))
 
 
 ;; TODO: simplify the path
@@ -62,6 +83,12 @@
                               (specter/if-path seqable? specter/ALL specter/STAY)
                               #(instance? MetaFn %)])
 
+;; TODO: simplify the path
+(def MACHINE-OPTIONS-ACTIVITIES [(specter/must :activities)
+                                 specter/MAP-VALS
+                                 (specter/if-path seqable? specter/ALL specter/STAY)
+                                 #(instance? MetaFn %)])
+
 
 (defn prepare-machine-config
   "Scans `config` of a XState machine and adopts it for JavaScript usage.
@@ -71,9 +98,7 @@
    Also the function does (clj->js) transformation."
   [config]
   (->> config
-       (specter/transform MACHINE-CONFIG-ACTIONS
-                          (fn [meta-fn]
-                            (.-afn meta-fn)))
+       (specter/transform MACHINE-CONFIG-ACTIONS meta-fn->js-fn)
        (clj->js)))
 
 
@@ -84,20 +109,19 @@
    by JavaScript host, thus they should be converted back to normal `js/Function` type.
    Also the function does (clj->js) transformation."
   [options]
-  (->> options
-       (specter/transform MACHINE-OPTIONS-ACTIONS
-                          (fn [meta-fn]
-                            (.-afn meta-fn)))
-       (clj->js)))
+    (->> options
+        (specter/transform MACHINE-OPTIONS-ACTIONS meta-fn->js-fn)
+        (specter/transform MACHINE-OPTIONS-ACTIVITIES meta-fn->js-fn)
+        (clj->js)))
 
 
-(defn meta-actions->interceptors-map
+(defn meta-handlers->interceptors-map
   "Transforms sequence of actions with interceptors metadata into a map where keys are metaless normall JS functions and values are list of interceptors."
   [actions & {:keys [bare?] :or {bare? true}}]
   (reduce (fn [m action-fn]
             (let [interceptors (:maximgb.re-state.core/xs-interceptors (meta action-fn))]
               (assoc m
-                     (.-afn action-fn)
+                     (meta-fn->js-fn action-fn)
                      (if-not bare?
                        (map (fn [interceptor]
                               (cond
@@ -122,8 +146,8 @@
    Returns a map with original action functions as keys and handlers' metadata as value,
    such that it can be easily looked up during runtime."
   [config & {:keys [bare?] :or {bare? true}}]
-  (meta-actions->interceptors-map (specter/select MACHINE-CONFIG-ACTIONS config)
-                                  :bare? bare?))
+  (meta-handlers->interceptors-map (specter/select MACHINE-CONFIG-ACTIONS config)
+                                   :bare? bare?))
 
 
 (defn machine-options->actions-interceptors
@@ -132,8 +156,18 @@
    Returns a map with original action functions as keys and handlers' metadata as value,
    such that it can be easily looked up during runtime."
   [options & {:keys [bare?] :or {bare? true}}]
-  (meta-actions->interceptors-map (specter/select MACHINE-OPTIONS-ACTIONS options)
-                                  :bare? bare?))
+  (meta-handlers->interceptors-map (specter/select MACHINE-OPTIONS-ACTIONS options)
+                                   :bare? bare?))
+
+
+(defn machine-options->activities-interceptors
+  "Extracts interceptors metadata from activities given in machine options.
+
+   Returns a map with original activities functions as keys and handlers' metadata as value,
+   such that it can be easily looked up during runtime."
+  [options & {:keys [bare?] :or {bare? true}}]
+  (meta-handlers->interceptors-map (specter/select MACHINE-OPTIONS-ACTIVITIES options)
+                                   :bare? bare?))
 
 
 (defn call-with-re-ctx-db-isolated

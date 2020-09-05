@@ -2,6 +2,7 @@
   (:require [maximgb.re-state.protocols :as protocols]
             [maximgb.re-state.utils :as utils]
             [maximgb.re-state.impl.machine :as machine]
+            [maximgb.re-state.services.spawn :as spawn]
             [re-frame.core :as rf]
             [xstate :as xs]))
 
@@ -12,7 +13,7 @@
    Each action is given as js-object with `exec` or `type` property. The method analyzes `type` first and then fallbacks to `exec`
    if `type` is unknown or not given and `exec` is defined. If none is given method returns first argument which is re-frame context."
   (fn [_re-ctx action]
-    (aget "type" action)))
+    (aget action "type")))
 
 
 (defmethod execute-action
@@ -23,6 +24,45 @@
     (if (map? result)
       result
       re-ctx)))
+
+
+(defmethod execute-action
+  "xstate.start"
+  [re-ctx action]
+  (let [activity (aget action "activity")]
+    (if-not activity
+      (throw "Can't start anything but activity!")
+      (let [type (keyword (aget activity "type"))
+            id (keyword (aget activity "id"))
+            interpreter (utils/re-ctx->*interpreter re-ctx)
+            interpreter-path (protocols/interpreter->path interpreter)
+            interpreter-child-path (conj interpreter-path :children id)
+            activity-start-fn (-> interpreter
+                                  (protocols/interpreter->machine)
+                                  (protocols/machine->options)
+                                  (get-in [:activities type]))]
+        (if-not activity-start-fn
+          (throw (str "Can't start activity :" type " no activity start function defined in machine!"))
+          (-> re-ctx
+              (rf/assoc-effect :maximgb.re-state.core/spawn [:start-activity [interpreter-child-path activity-start-fn re-ctx activity]])
+              (rf/assoc-effect :db (-> (rf/get-effect re-ctx :db)
+                                       (assoc-in interpreter-child-path true)))))))))
+
+
+(defmethod execute-action
+  "xstate.stop"
+  [re-ctx action]
+  (let [activity (aget action "activity")]
+    (if-not activity
+      (throw "Can't stop anything but activity!")
+      (let [id (keyword (aget activity "id"))
+            interpreter (utils/re-ctx->*interpreter re-ctx)
+            interpreter-path (protocols/interpreter->path interpreter)
+            interpreter-child-path (conj interpreter-path :children id)]
+        (-> re-ctx
+            (rf/assoc-effect :maximgb.re-state.core/spawn [:stop-activity [interpreter-child-path]])
+            (rf/assoc-effect :db (-> (rf/get-effect re-ctx :db)
+                                     (assoc-in interpreter-child-path nil))))))))
 
 
 (defn- execute-transition-actions
@@ -40,16 +80,26 @@
              (execute-action ret action))))
 
 
+;; TODO: refactor to take into account not only actions and activities
 (defn- machine-actions->interceptors
   "Collects vector of unique action interceptors (#js [action]) -> [].
 
    If several actions require same interceptor the interceptor will be included only once."
   [machine actions]
-  (let [interceptors (machine/machine->interceptors machine)]
+  (let [interceptors (machine/machine->interceptors machine)
+        options (protocols/machine->options machine)]
     (last (areduce actions idx result [#{} []]
                    (-> (aget actions idx)
                        ((fn [^js/Object action]
-                          (get interceptors (.-exec action))))
+                          (if-let [exec-fn (.-exec action)]
+                            (get interceptors exec-fn)
+                            (if-let [activity (.-activity action)]
+                              (as-> activity $
+                                (aget $ "type")
+                                (keyword $)
+                                (get-in options [:activities $])
+                                (utils/meta-fn->js-fn $)
+                                (get interceptors $))))))
                        ((fn [action-interceptors]
                           (let [[result-interceptors-set result-interceptors-vec] result
                                 action-interceptors-filtered (filterv (fn [interceptor]
@@ -168,7 +218,6 @@
                                                                                      re-ctx)))
               actions (.-actions xs-new-state)
               interceptors (machine-actions->interceptors machine actions)]
-          (prn "Transiting " xs-event-type)
           (vswap! *interpreter
                   assoc
                   :state xs-new-state)

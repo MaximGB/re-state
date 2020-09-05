@@ -3,11 +3,12 @@
             [re-frame.core :as rf]
             [maximgb.re-state.protocols :as protocols]))
 
-(defn- make-interpreter-isolated-db-path
-  [path]
-  (conj path :db))
 
 (defn- db-action->re-ctx-handler
+  "Adopts `handler` function to be called with `re-ctx` re-frame context.
+
+   Adopting function extracts all `handler` required params from `re-ctx` and passes them to the `handler`,
+   then associates `handler` return value to `re-ctx` `:db` effect and co-effect"
   [handler]
   (fn [re-ctx js-meta]
    (let [db (rf/get-coeffect re-ctx :db)
@@ -52,16 +53,21 @@
    (let [db-handler (db-action->re-ctx-handler handler)]
      (with-meta
        (fn [re-ctx js-meta]
-         (let [interpreter (utils/re-ctx->*interpreter re-ctx)
-               interpreter-path (protocols/interpreter->path interpreter)]
-           (utils/with-re-ctx-db-isolated re-ctx
-                                          (make-interpreter-isolated-db-path interpreter-path)
-                                          db-handler
-                                          js-meta)))
+         (utils/with-re-ctx-db-isolated
+           re-ctx
+           (utils/re-ctx->interpreter-isolated-db-path re-ctx)
+           db-handler
+           js-meta))
        {:maximgb.re-state.core/xs-interceptors interceptors}))))
 
 
 (defn- fx-action->re-ctx-handler
+  "Adopts `handler` function to be called with `re-ctx` re-frame context.
+
+   Adopting function extracts all `handler` required params from `re-ctx` and passes them to the `handler`.
+   `handler` return value is effects map which will be associated back to `re-ctx` `:effects` map.
+   `:db` effect is handled differently from other effects, it's associtated with `re-ctx` `:db` co-effect as well, since there might
+   be other handlers which also might read `:db` co-effect. If it's not be updated then next handler will use outdated `:db` value."
   [handler]
   (fn [re-ctx js-meta]
     (let [cofx (rf/get-coeffect re-ctx)
@@ -115,16 +121,19 @@
    (let [fx-handler (fx-action->re-ctx-handler handler)]
      (with-meta
        (fn [re-ctx js-meta]
-         (let [interpreter (utils/re-ctx->*interpreter re-ctx)
-               interpreter-path (protocols/interpreter->path interpreter)]
-           (utils/with-re-ctx-db-isolated re-ctx
-                                          (make-interpreter-isolated-db-path interpreter-path)
-                                          fx-handler
-                                          js-meta)))
+         (utils/with-re-ctx-db-isolated
+           re-ctx
+           (utils/re-ctx->interpreter-isolated-db-path re-ctx)
+           fx-handler
+           js-meta))
        {:maximgb.re-state.core/xs-interceptors interceptors}))))
 
 
 (defn- ctx-action->re-ctx-handler
+  "Adopts `handler` function to be called with `re-ctx` re-frame context.
+
+   Adopting function extracts all `handler` required params from `re-ctx` and passes them to the `handler`.
+   `handler` return value is considered to be new `re-ctx`."
   [handler]
   (fn [re-ctx js-meta]
     (let [xs-event (utils/re-ctx->xs-event re-ctx)
@@ -163,10 +172,9 @@
    (let [ctx-handler (ctx-action->re-ctx-handler handler)]
      (with-meta
        (fn [re-ctx js-meta]
-         (let [interpreter (utils/re-ctx->*interpreter re-ctx)
-               interpreter-path (protocols/interpreter->path interpreter)]
-           (utils/with-re-ctx-db-isolated re-ctx
-                                          (make-interpreter-isolated-db-path interpreter-path)
-                                          ctx-handler
-                                          js-meta)))
+         (utils/with-re-ctx-db-isolated
+           re-ctx
+           (utils/re-ctx->interpreter-isolated-db-path re-ctx)
+           ctx-handler
+           js-meta))
        {:maximgb.re-state.core/xs-interceptors interceptors}))))

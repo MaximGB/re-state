@@ -9,10 +9,16 @@
 
 
 (defn- make-machine-interceptors
-  "Extracts interceptors map from machine config and options."
+  "Extracts interceptors map from machine config and options.
+
+   The map contains JavaScript callable function as keys and their metadata as values. Machine config and options are scanned for
+   handler function with meta data attached and this map is constructed. Machine will be constructed with config and options containing
+   handlers cleared of metadata. This is needed because ClojureScript encodes function with metadata into `MetaFn` objects which vanilla
+   JavaScript can't call. Thus to preserve metadata with map is used."
   [config options]
   (merge (utils/machine-config->actions-interceptors config :bare? false)
-         (utils/machine-options->actions-interceptors options :bare? false)))
+         (utils/machine-options->actions-interceptors options :bare? false)
+         (utils/machine-options->activities-interceptors options :bare? false)))
 
 
 (defn- make-machine-xs-machine
