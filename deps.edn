@@ -8,10 +8,10 @@
  :paths ["src/cljs"]
 
  :aliases {:fig   {:extra-deps {com.bhauman/rebel-readline-cljs {:mvn/version "0.1.4"}
-                                com.bhauman/figwheel-main {:mvn/version "0.2.3"}}}
+                                com.bhauman/figwheel-main {:mvn/version "0.2.11"}}}
 
 
-           :dev    {:extra-deps {org.clojure/core.async {:mvn/version "0.4.500"}}
+           :dev    {:extra-deps {org.clojure/core.async {:mvn/version "1.3.610"}}
 
                     :extra-paths ["resources" "target" "test" "examples/src"]}
 
@@ -32,8 +32,8 @@
                     :main-opts ["-m" "deps-deploy.deps-deploy" "deploy" "target/maximgb.re-state.jar"]}
 
            ;; - examples, run with :fig:examples -
-           :examples           {:extra-paths ["target" "examples/src"]}
-
+           :examples           {:extra-paths ["target" "examples/src"]
+                                :extra-deps {org.clojure/core.async {:mvn/version "1.3.610"}}}
 
            :example-basic      {:main-opts ["-m"  "figwheel.main"
                                             "-co" "example.cljs.edn"
@@ -63,4 +63,10 @@
                                             "-co" "example.cljs.edn"
                                             "-O"  "advanced"
                                             "-o"  "docs/examples/isolation/prod-main.js"
-                                            "-c"  "maximgb.re-state.example.isolation"]}}}
+                                            "-c"  "maximgb.re-state.example.isolation"]}
+
+           :example-activities {:main-opts ["-m"  "figwheel.main"
+                                            "-co" "example.cljs.edn"
+                                            "-O"  "advanced"
+                                            "-o"  "docs/examples/activities/prod-main.js"
+                                            "-c"  "maximgb.re-state.example.activities"]}}}

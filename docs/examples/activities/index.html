@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+
+        <title>maximgb.re-state activties example</title>
+
+        <link rel="stylesheet"
+              href="//cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css">
+
+        <link rel="stylesheet"
+              href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.16.2/build/styles/default.min.css">
+
+        <style>
+         body {
+             width: 100vw;
+             height: 100vh;
+             overflow: hidden;
+             margin: 0;
+         }
+
+         #maincontainer {
+             min-height: 100%;
+         }
+
+         #maincontainer h2 {
+             flex-grow: 0;
+         }
+
+         #source-segment {
+             padding: 0px;
+             height: 100px;
+             overflow: auto;
+         }
+
+         #source-segment .hljs {
+             background-color: transparent;
+             overflow: visible;
+         }
+        </style>
+    </head>
+    <body>
+        <div id="maincontainer" class="ui internally celled equal height stretched grid">
+            <div class="row">
+                <div class="eight wide column">
+                    <h2 class="ui sub header">maximgb.re-state activties example</h2>
+                    <div class="ui segment">
+                        <div id="app"></div>
+                    </div>
+                </div>
+                <div class="eight wide column">
+                    <h2 class="ui sub header">Example source:</h2>
+                    <div id="source-segment" class="ui segment">
+                        <div id="source-dimmer" class="ui active inverted dimmer">
+                            <div class="ui indeterminate text loader">Loading example source code</div>
+                        </div>
+                        <pre><code class="clojure"></code></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script src="./prod-main.js" type="text/javascript"></script>
+        <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.16.2/build/highlight.min.js"></script>
+        <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.16.2/build/languages/clojure.min.js"></script>
+
+        <script>
+         var sourceCode = document.querySelector('pre code'),
+             sourceDimmer = document.getElementById('source-dimmer');
+
+         function htmlEscape(text){
+             return text.replace(/&/g, '&amp;').replace(/>/g, '&gt;').replace(/</g, '&lt;').replace(/"/g, '&quot;');
+         }
+
+         fetch('https://raw.githubusercontent.com/MaximGB/re-state/master/./examples/src/maximgb/re_state/example/activities.cljs').then(
+             function fetchSuccess(response) {
+                 return response.text();
+             },
+             function fetchFailure() {
+                 sourceDimmer.remove();
+                 sourceCode.innerHTML = "Loading failed.";
+             }).then(
+                 function textSuccess(text) {
+                     sourceDimmer.remove();
+                     sourceCode.innerHTML = htmlEscape(text);
+                     hljs.highlightBlock(sourceCode);
+                 },
+                 function textFailure() {
+                     sourceDimmer.remove();
+                     sourceCode.innerHTML = "Loading failed.";
+                 }
+             );
+        </script>
+    </body>
+</html>

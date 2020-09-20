@@ -9,7 +9,8 @@
                                           reg-isub
                                           isubscribe
                                           isubscribe-state
-                                          idb-action]]))
+                                          idb-action]]
+            [maximgb.re-state.utils :as utils]))
 
 (def rf-checkpoint (volatile! nil))
 
@@ -45,7 +46,7 @@
                ;; Resetting db
                (rf/dispatch [::update-db nil {}])
                ;; Updating db part under interpreter part manually
-               (rf/dispatch [::update-db [:a :b :c] ::my-value])
+               (rf/dispatch [::update-db (utils/interpreter->isolated-db-path i) ::my-value])
                ;; Waiting for dispatch to be handled
                (rf/dispatch [::next])
                (casync/<! c)

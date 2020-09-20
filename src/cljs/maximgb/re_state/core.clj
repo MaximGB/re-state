@@ -118,42 +118,63 @@
 
 
 (defmacro def-activity-ev
-  "Adds event activity (`ev-activity`) with given `id` and handler function `activity-fn` to the machine defined by `var-name`."
-  [var-name id activity-fn]
-  `(machine-add-activity! ~var-name ~id (ev-activity ~activity-fn)))
+  "Adds event activity (`ev-activity`) with given `id` and handler function `activity-fn` with `interceptors`, if needed, to the machine defined by `var-name`."
+  ([var-name id activity-fn]
+   `(machine-add-activity! ~var-name ~id (ev-activity ~activity-fn)))
+
+  ([var-name id interceptors activity-fn]
+   `(machine-add-activity! ~var-name ~id (ev-activity ~interceptors ~activity-fn))))
 
 
 (defmacro def-activity-db
-  "Adds DB-activity (`db-activity`) with given `id` and handler function `activity-fn` to the machine defined by `var-name`."
-  [var-name id activity-fn]
-  `(machine-add-activity! ~var-name ~id (db-activity ~activity-fn)))
+  "Adds DB-activity (`db-activity`) with given `id` and handler function `activity-fn` with `interceptors`, if needed, to the machine defined by `var-name`."
+  ([var-name id activity-fn]
+   `(machine-add-activity! ~var-name ~id (db-activity ~activity-fn)))
+
+  ([var-name id interceptors activity-fn]
+   `(machine-add-activity! ~var-name ~id (db-activity ~interceptors ~activity-fn))))
 
 
 (defmacro def-activity-idb
-  "Adds isolated DB-activity (`idb-activity`) with given `id` and handler function `activity-fn` to the machine defined by `var-name`."
-  [var-name id activity-fn]
-  `(machine-add-activity! ~var-name ~id (idb-activity ~activity-fn)))
+  "Adds isolated DB-activity (`idb-activity`) with given `id` and handler function `activity-fn` with `interceptors`, if needed, to the machine defined by `var-name`."
+  ([var-name id activity-fn]
+   `(machine-add-activity! ~var-name ~id (idb-activity ~activity-fn)))
+
+  ([var-name id interceptors activity-fn]
+   `(machine-add-activity! ~var-name ~id (idb-activity ~interceptors ~activity-fn))))
 
 
 (defmacro def-activity-fx
-  "Adds FX-activity (`fx-activity`) with given `id` and handler function `activity-fn` to the machine defined by `var-name`."
-  [var-name id activity-fn]
-  `(machine-add-activity! ~var-name ~id (fx-activity ~activity-fn)))
+  "Adds FX-activity (`fx-activity`) with given `id` and handler function `activity-fn` with `interceptors`, if needed, to the machine defined by `var-name`."
+  ([var-name id activity-fn]
+   `(machine-add-activity! ~var-name ~id (fx-activity ~activity-fn)))
+
+  ([var-name id interceptors activity-fn]
+   `(machine-add-activity! ~var-name ~id (fx-activity ~interceptors ~activity-fn))))
 
 
 (defmacro def-activity-ifx
-  "Adds isolated FX-activity (`ifx-activity`) with given `id` and handler function `activity-fn` to the machine defined byb `var-name`."
-  [var-name id activity-fn]
-  `(machine-add-activity! ~var-name ~id (ifx-activity ~activity-fn)))
+  "Adds isolated FX-activity (`ifx-activity`) with given `id` and handler function `activity-fn` with `interceptors`, if needed, to the machine defined byb `var-name`."
+  ([var-name id activity-fn]
+   `(machine-add-activity! ~var-name ~id (ifx-activity ~activity-fn)))
+
+  ([var-name id interceptors activity-fn]
+   `(machine-add-activity! ~var-name ~id (ifx-activity ~interceptors ~activity-fn))))
 
 
 (defmacro def-activity-ctx
-  "Adds CTX-axtivity (`ctx-activity`) with given `id` and handler function `activity-fn` to the machine defined by `var-name`."
-  [var-name id activity-fn]
-  `(machine-add-activity! ~var-name ~id (ctx-activity ~activity-fn)))
+  "Adds CTX-axtivity (`ctx-activity`) with given `id` and handler function `activity-fn` with `interceptors`, if needed, to the machine defined by `var-name`."
+  ([var-name id activity-fn]
+   `(machine-add-activity! ~var-name ~id (ctx-activity ~activity-fn)))
+
+  ([var-name id interceptors activity-fn]
+   `(machine-add-activity! ~var-name ~id (ctx-activity ~interceptors ~activity-fn))))
 
 
 (defmacro def-activity-ctx
-  "Adds isolated CTX-axtivity (`ctx-activity`) with given `id` and handler function `activity-fn` to the machine defined by `var-name`."
-  [var-name id activity-fn]
-  `(machine-add-activity! ~var-name ~id (ictx-activity ~activity-fn)))
+  "Adds isolated CTX-axtivity (`ctx-activity`) with given `id` and handler function `activity-fn` with `interceptors`, if needed, to the machine defined by `var-name`."
+  ([var-name id activity-fn]
+   `(machine-add-activity! ~var-name ~id (ictx-activity ~activity-fn)))
+
+  ([var-name id interceptors activity-fn]
+   `(machine-add-activity! ~var-name ~id (ictx-activity ~interceptors ~activity-fn))))

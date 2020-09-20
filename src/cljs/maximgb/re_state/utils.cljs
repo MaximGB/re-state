@@ -36,7 +36,7 @@
 
 
 (defn interpreter->isolated-db-path
-  "Gets isolated interpreter path in the re-frame database"
+  "Gets isolated interpreter database path in the re-frame database."
   [interpreter]
   (-> interpreter
       (protocols/interpreter->path)
@@ -49,6 +49,14 @@
   (-> re-ctx
       (re-ctx->*interpreter)
       (interpreter->isolated-db-path)))
+
+
+(defn interpreter->isolated-state-path
+  "Get isolated interpreter state path in the re-frame database."
+  [interpreter]
+  (-> interpreter
+      (protocols/interpreter->path)
+      (conj :state)))
 
 
 (defn js-meta->kv-argv

@@ -4,16 +4,35 @@
 
 
 (rf/reg-sub
- :maximgb.re-state.core/sub-interpreter-db
+ :maximgb.re-state.core/sub-interpreter-root
  (fn [db [_ interpreter]]
    (let [path (protocols/interpreter->path interpreter)]
      (get-in db path))))
 
 
-(defn isubscribe
+(defn- isubscribe-root
   "Creates a reaction to changes in `interpreter` path isolated part of the app db."
   [interpreter]
-  (rf/subscribe [:maximgb.re-state.core/sub-interpreter-db interpreter]))
+  (rf/subscribe [:maximgb.re-state.core/sub-interpreter-root interpreter]))
+
+
+(rf/reg-sub
+ :maximgb.re-state.core/sub-interpreter-db
+ (fn [[_ interpreter]]
+   (isubscribe-root interpreter))
+ (fn [db]
+   (:db db)))
+
+
+(defn isubscribe
+  "Creates a reaction to changes in `interpreter` path isolated part of the app db.
+
+   Can take just `interpreter` as the parameter and will subscribe to the interpreter isolated db changes,
+   or can take a subscription query vector passing it to rf/subscribe unaltered in this case."
+  [interpreter]
+  (rf/subscribe (if (vector? interpreter)
+                  interpreter
+                  [:maximgb.re-state.core/sub-interpreter-db interpreter])))
 
 
 (defn reg-isub
@@ -32,8 +51,10 @@
    computation-fn))
 
 
-(reg-isub
+(rf/reg-sub
  :maximgb.re-state.core/sub-interpreter-state
+ (fn [[_ interpreter]]
+   (isubscribe-root interpreter))
  (fn [idb [_ _ keywordize?]]
    (let [state (:state idb)]
      (cond

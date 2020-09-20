@@ -5,7 +5,8 @@
                      :actions-example {:main maximgb.re-state.example.actions}
                      :entry-exit-example {:main maximgb.re-state.example.entryexit}
                      :gauge-example {:main maximgb.re-state.example.gauge}
-                     :isolation-example {:main maximgb.re-state.example.isolation}}}
+                     :isolation-example {:main maximgb.re-state.example.isolation}
+                     :activities-example {:main maximgb.re-state.example.activities}}}
 {:main maximgb.re-state.core
  :source-map true
  :npm-deps false

@@ -39,6 +39,11 @@ EXAMPLE_ISOLATION_HTML_TITLE = "maximgb.re-state gauge widget with isolation exa
 EXAMPLE_ISOLATION_INDEX = $(EXAMPLE_ISOLATION)/index.html
 EXAMPLE_ISOLATION_CLJS = ./examples/src/maximgb/re_state/example/isolation.cljs
 
+EXAMPLE_ACTIVITIES = ./docs/examples/activities
+EXAMPLE_ACTIVITIES_HTML_TITLE = "maximgb.re-state activties example"
+EXAMPLE_ACTIVITIES_INDEX = $(EXAMPLE_ACTIVITIES)/index.html
+EXAMPLE_ACTIVITIES_CLJS = ./examples/src/maximgb/re_state/example/activities.cljs
+
 .PHONY: clean pom deploy xstate_bundle examples
 
 
@@ -132,7 +137,19 @@ $(EXAMPLE_ISOLATION): xstate_bundle $(EXAMPLE_ISOLATION_CLJS) $(EXAMPLE_ISOLATIO
 	clj -A\:fig:examples:example-isolation
 
 
-examples: $(EXAMPLE_BASIC) $(EXAMPLE_ACTIONS) $(EXAMPLE_ENTRYEXIT) $(EXAMPLE_GAUGE) $(EXAMPLE_ISOLATION)
+$(EXAMPLE_ACTIVITIES_INDEX): $(EXAMPLE_HTML_TPL)
+	mkdir -p $(EXAMPLE_ACTIVITIES)
+	cp -f $(EXAMPLE_HTML_TPL) $(EXAMPLE_ACTIVITIES_INDEX)
+
+
+$(EXAMPLE_ACTIVITIES): xstate_bundle $(EXAMPLE_ACTIVITIES_CLJS) $(EXAMPLE_ACTIVITIES_INDEX)
+	export EXAMPLE_TITLE="$$(echo $(EXAMPLE_ACTIVITIES_HTML_TITLE) | sed -e 's/[\/&]/\\&/g')"; \
+  export EXAMPLE_CLJS="$$(echo $(EXAMPLE_ACTIVITIES_CLJS) | sed -e 's/[\/&]/\\&/g')"; \
+	sed -i -E -z -e "s/%TITLE%/$$EXAMPLE_TITLE/g" -e "s/%EXAMPLE_CLJS%/$$EXAMPLE_CLJS/g" $(EXAMPLE_ACTIVITIES_INDEX)
+	clj -A\:fig:examples:example-activities
+
+
+examples: $(EXAMPLE_BASIC) $(EXAMPLE_ACTIONS) $(EXAMPLE_ENTRYEXIT) $(EXAMPLE_GAUGE) $(EXAMPLE_ISOLATION) $(EXAMPLE_ACTIVITIES)
 
 
 $(JAR): $(POM_XML) xstate_bundle

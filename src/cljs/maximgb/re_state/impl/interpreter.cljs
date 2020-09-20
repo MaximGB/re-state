@@ -120,7 +120,7 @@
                (execute-transition-actions re-ctx actions)))))
 
 
-;; Re-frame interceptor storing interpreter state under interpreter path ::state keyword
+;; Re-frame interceptor storing interpreter state under interpreter path :state keyword
 (def store-state-interceptor
   (rf/->interceptor
    :id ::store-state-interceptor
