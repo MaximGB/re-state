@@ -86,38 +86,43 @@
         yellow-sub (rf/subscribe [:yellow])
         red-sub (rf/subscribe [:red])]
     (fn []
-      [:div
-       [(if @green-sub
-          :button.ui.massive.circular.green.icon.button
-          :button.ui.massive.circular.disabled.icon.button)
-        {:on-click #(rs/interpreter-send! controller :to-yellow)}]
-       [(if @yellow-sub
-          :button.ui.massive.circular.yellow.icon.button
-          :button.ui.massive.circular.disabled.icon.button)
-        {:on-click #(rs/interpreter-send! controller :to-red)}]
-       [(if @red-sub
-          :button.ui.massive.circular.red.icon.button
-          :button.ui.massive.circular.disabled.icon.button)
-        {:on-click #(rs/interpreter-send! controller :to-green)}]
+      [:<>
+       [:div
+        [(if @green-sub
+           :button.btn.btn-success.btn-lg.rounded-circle
+           :button.btn.btn-outline-dark.btn-lg.rounded-circle.disabled)
+         {:on-click #(rs/interpreter-send! controller :to-yellow)}
+         "G"]
+        [(if @yellow-sub
+           :button.btn.btn-warning.btn-lg.rounded-circle
+           :button.btn.btn-outline-dark.btn-lg.rounded-circle.disabled)
+         {:on-click #(rs/interpreter-send! controller :to-red)}
+         "Y"]
+        [(if @red-sub
+           :button.btn.btn-danger.btn-lg.rounded-circle
+           :button.btn.btn-outline-dark.btn-lg.rounded-circle.disabled)
+         {:on-click #(rs/interpreter-send! controller :to-green)}
+         "R"]]
        [:div {:style {:margin-top "0.5em"}}
-        [:div.ui.buttons
+        [:div.btn-group
          [(if (= @state :off)
-            :button.ui.button.positive
-            :button.ui.button.disabled)
+            :button.btn.btn-success
+            :button.btn.btn-outline-dark.disabled)
           {:on-click #(rs/interpreter-send! controller :toggle)}
           "On"]
          [:div.or]
          [(if (not= @state :off )
-            :button.ui.button.negative
-            :button.ui.button.disabled)
+            :button.btn.btn-danger
+            :button.btn.btn-outline-dark.disabled)
           {:on-click #(rs/interpreter-send! controller :toggle)}
           "Off"]]]])))
 
 
 (defn ^:after-load -main []
-  (reagent/render [:div
-                   [:div "Click on the active light to transit to the next mode."]
-                   [traffic-light]]
+  (reagent/render [:div.d-flex.flex-column
+                   [:div.text-center.m-2 "Turn the machine on and then click on the active light to transit to the next mode."]
+                   [:div.flex-grow-1.d-flex.flex-column.align-items-center
+                    [traffic-light]]]
                   (.getElementById js/document "app")))
 
 
