@@ -17,10 +17,9 @@
     (fn []
       [:div
        "Current state is: "
-       [:div {:style {:display :inline-block
-                      :width "5em"}}
+       [:div.d-inline-block {:style {:width "5em"}}
         @state-sub]
-       [:button
+       [:button.btn.btn-info
         {:on-click #(rs/interpreter-send! controller :click)}
         "Next state"]])))
 
