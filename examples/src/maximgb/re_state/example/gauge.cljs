@@ -15,7 +15,7 @@
   {:id      :gauge-component-machine
    :initial :initialized
    :states  {:initialized {:entry  :initialize-db
-                           :on     {"" :ready}}
+                           :always :ready}
 
              :ready       {:on     {:thumb-pointer-down {:target  :steady
                                                          :actions [:save-drag-start-position :capture-pointer]}}}

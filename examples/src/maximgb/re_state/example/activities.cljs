@@ -10,8 +10,7 @@
    :states {:off    {:entry       :initialize-db
                      :on         {:toggle    :on}}
             :on     {:on         {:toggle    :off
-                                  :blink-on  {:actions :blink-on}
-                                  :blink-off {:actions :blink-off}}
+                                  :blink     {:actions :blink}}
                      :activities [:blinking]}}})
 
 
@@ -23,15 +22,14 @@
     (let [interpreter (get-in cofx [rs/re-state-service :instance])
           *stop (volatile! nil)]
       (async/go-loop [counter 0]
-        (let [pause (async/timeout 1000)]
-          (rs/interpreter-send! interpreter (if (= 0 (mod counter 2))
-                                                :blink-on
-                                                :blink-off))
+        (let [pause (async/timeout 300)]
+          (rs/interpreter-send! interpreter :blink counter)
           (async/<! pause)
           (if-not @*stop
             (recur (inc counter)))))
       (fn []
         (vreset! *stop true)))))
+
 
 (rs/def-action-idb
   blinking-machine
@@ -40,18 +38,14 @@
     {:blink :off}))
 
 
-(rs/def-action-idb
-  blinking-machine
-  :blink-on
-  (fn [db]
-    (assoc db :blink :on)))
+(def blink-opts [:green :yellow :red])
 
 
 (rs/def-action-idb
   blinking-machine
-  :blink-off
-  (fn [db]
-    (assoc db :blink :off)))
+  :blink
+  (fn [db [_ counter]]
+    (assoc db :blink (blink-opts (mod counter 3)))))
 
 
 (rs/reg-isub
@@ -65,16 +59,45 @@
         blink-sub (rs/isubscribe [::blink-state controller])
         state-sub (rs/isubscribe-state controller)]
     (fn []
-      [:div "Blinker!"
-       [:button {:on-click #(rs/interpreter-send! controller :toggle)} "Toggle"]
-       [:div "Machine state: " @state-sub]
-       [:div "Blink state: " (if (= @blink-sub :on)
-                               "On"
-                               "Off")]])))
+      (let [blink-state @blink-sub
+            state       @state-sub]
+        [:<>
+         [:div
+          [(if (= blink-state :green)
+             :button.btn.btn-success.btn-lg.rounded-circle
+             :button.btn.btn-outline-dark.btn-lg.rounded-circle.disabled)
+           {:on-click #(rs/interpreter-send! controller :to-yellow)}
+           "G"]
+          [(if (= blink-state :yellow)
+             :button.btn.btn-warning.btn-lg.rounded-circle
+             :button.btn.btn-outline-dark.btn-lg.rounded-circle.disabled)
+           {:on-click #(rs/interpreter-send! controller :to-red)}
+           "Y"]
+          [(if (= blink-state :red)
+             :button.btn.btn-danger.btn-lg.rounded-circle
+             :button.btn.btn-outline-dark.btn-lg.rounded-circle.disabled)
+           {:on-click #(rs/interpreter-send! controller :to-green)}
+           "R"]]
+         [:div.btn-group.mt-2
+          [(if (= state :off)
+             :button.btn.btn-success
+             :button.btn.btn-outline-dark.disabled)
+           {:on-click #(rs/interpreter-send! controller :toggle)}
+           "On"]
+          [(if (= state :on)
+             :button.btn.btn-danger
+             :button.btn.btn-outline-dark.disabled)
+           {:on-click #(rs/interpreter-send! controller :toggle)}
+           "Off"]]]))))
+
 
 
 (defn ^:after-load -main []
-  (reagent/render [blinker]
+
+  (reagent/render [:div.d-flex.flex-column
+                   [:div.text-center.m-2 "Turn the machine on and and watch activity running."]
+                   [:div.flex-grow-1.d-flex.flex-column.align-items-center
+                    [blinker]]]
                   (.getElementById js/document "app")))
 
 

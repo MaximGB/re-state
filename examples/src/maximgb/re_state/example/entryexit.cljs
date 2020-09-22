@@ -100,18 +100,17 @@
            :button.btn.btn-outline-dark.btn-lg.rounded-circle.disabled)
          {:on-click #(rs/interpreter-send! controller :to-green)}
          "R"]]
-       [:div {:style {:margin-top "0.5em"}}
-        [:div.btn-group
-         [(if (= @state :off)
-            :button.btn.btn-success
-            :button.btn.btn-outline-dark.disabled)
-          {:on-click #(rs/interpreter-send! controller :toggle)}
-          "On"]
-         [(if (not= @state :off )
-            :button.btn.btn-danger
-            :button.btn.btn-outline-dark.disabled)
-          {:on-click #(rs/interpreter-send! controller :toggle)}
-          "Off"]]]])))
+       [:div.btn-group.mt-2
+        [(if (= @state :off)
+           :button.btn.btn-success
+           :button.btn.btn-outline-dark.disabled)
+         {:on-click #(rs/interpreter-send! controller :toggle)}
+         "On"]
+        [(if (not= @state :off )
+           :button.btn.btn-danger
+           :button.btn.btn-outline-dark.disabled)
+         {:on-click #(rs/interpreter-send! controller :toggle)}
+         "Off"]]])))
 
 
 (defn ^:after-load -main []
