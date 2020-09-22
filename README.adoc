@@ -432,3 +432,44 @@ Currently there're two predefined subscriptions provided by the library:
 
 - `(isubscribe interpreter)` - subscribes to the whole interpreter isolated database section
 - `(isubscribe-state interpreter)` - subscribes to the interpreter active state value
+
+=== Activities
+
+An activity is an action that occurs over time, and can be started and stopped.
+
+[quote, Harel's original statecharts paper:]
+An activity always takes a nonzero amount of time, like beeping, displaying, or executing lengthy computations.
+
+Re-state being build on XState uses the same way to define an activity. Activities are specified on the activities property of a state node.
+When a state node is entered, an interpreter should start its activities, and when it is exited, it should stop its activities.
+
+[source, clojure]
+----
+(rs/def-machine blinking-machine
+  {:initial :off
+   :states {:off    {:entry       :initialize-db
+                     :on         {:toggle    :on}}
+            :on     {:on         {:toggle    :off
+                                  :blink     {:actions :blink}}
+                     :activities [:blinking]}}})
+----
+
+In the above machine configuration, the `:blinking` activity will start when `:on` state is entered. Leaving a state will stop the activity.
+
+The activity implementation should be provided either in machine options under `:activities` section, where each activity should be designated
+by an unique id. Or uring DSL:
+- `(def-acitivty-ev)`
+- `(def-acitivty-db)`
+- `(def-acitivty-idb)`
+- `(def-acitivty-fx)`
+- `(def-acitivty-ifx)`
+- `(def-acitivty-ctx)`
+- `(def-acitivty-ictx)`
+
+Activity implementation function should start the activity as it's side effect and return a function which stops the activity started.
+The function returned will be called by the re-state interpreter upon state leave to stop the activity.
+
+[NOTE]
+====
+Simple activity example can be found https://maximgb.github.io/re-state/examples/activities/[here].
+====

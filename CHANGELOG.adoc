@@ -8,6 +8,10 @@ ifdef::env-github[]
 :warning-caption: :warning
 endif::[]
 
+== 1.2.0
+- Activities support added
+- Examples are switched to Bootstrap from Semantic UI
+
 == 1.1.0
 - Service to control other machines via re-frame co/effects included back (it was removed before 1.0.0 release)
 
