@@ -161,44 +161,47 @@
                                                :max max
                                                :val val
                                                :drag-threshold drag-threshold)
-        thumb-pos-sub (rf/subscribe [:thumb-pos controller])
-        value-sub     (rf/subscribe [:value controller])]
+        thumb-pos-sub (rs/isubscribe [:thumb-pos controller])
+        value-sub     (rs/isubscribe [:value controller])]
 
     (fn []
       [:div.gauge-container
-       [:div.gauge-scale-container
-        {:style {:position :relative}}
-        [:div.ui.divider
+       [:div.gauge-scale-container.position-relative.m-2
+        [:div.divider.border
          {:style {:position :absolute
                   :top "50%"
                   :margin 0
-                  :width "100%"}}]
-        [:i.red.circle.outline.icon
+                  :width "100%"
+                  :height "3px"}}]
+        [:button.btn.btn-sm.btn-info.rounded-circle
 
          {:style {:transform "translateX(-50%)"
                   :left (str @thumb-pos-sub "%")
                   :position :relative
-                  :cursor :pointer
-                  :background-color :white}
+                  :cursor :pointer}
 
           :on-pointer-down #(rs/interpreter-send! controller
                                                   :thumb-pointer-down
-                                                  (BrowserEvent. %))
+                                                  (do (.persist %)
+                                                      %))
 
           :on-pointer-move #(rs/interpreter-send! controller
                                                   :thumb-pointer-move
-                                                  (BrowserEvent. %))
+                                                  (do (.persist %)
+                                                      %))
 
           :on-pointer-up #(rs/interpreter-send!   controller
                                                   :thumb-pointer-up
-                                                  (BrowserEvent. %))}]]
+                                                  (do (.persist %)
+                                                      %))}
+         "⊙"]]
        [:div.gauge-value
         {:style {:text-align :center}}
         (str (.round js/Math @value-sub) "%")]])))
 
 
 (defn ^:after-load -main []
-  (reagent/render [:div
+  (reagent/render [:div.m-2
                    "Drag & drop the red thumb to change the value."
                    [gauge-component]]
                   (.getElementById js/document "app")))
