@@ -173,7 +173,7 @@
                   :margin 0
                   :width "100%"
                   :height "3px"}}]
-        [:button.btn.btn-sm.btn-info.rounded-circle
+        [:button.btn.btn-sm.btn-danger.rounded-circle
 
          {:style {:transform "translateX(-50%)"
                   :left (str @thumb-pos-sub "%")

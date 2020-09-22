@@ -155,43 +155,46 @@
    (:val db)))
 
 
-(defn gauge-component [& {:keys [path min max val drag-threshold]}]
-  (let [controller (rs/interpreter-sync-start! (rs/interpreter! path gauge-component-machine)
+(defn gauge-component [& {:keys [min max val drag-threshold]}]
+  (let [controller (rs/interpreter-sync-start! (rs/interpreter! gauge-component-machine)
                                                :min min
                                                :max max
                                                :val val
                                                :drag-threshold drag-threshold)
-        thumb-pos-sub (rf/subscribe [:thumb-pos controller])
-        value-sub     (rf/subscribe [:value controller])]
+        thumb-pos-sub (rs/isubscribe [:thumb-pos controller])
+        value-sub     (rs/isubscribe [:value controller])]
 
     (fn []
       [:div.gauge-container
-       [:div.gauge-scale-container
-        {:style {:position :relative}}
-        [:div.ui.divider
+       [:div.gauge-scale-container.position-relative.m-2
+        [:div.divider.border
          {:style {:position :absolute
                   :top "50%"
                   :margin 0
-                  :width "100%"}}]
-        [:i.red.circle.outline.icon
+                  :width "100%"
+                  :height "3px"}}]
+        [:button.btn.btn-sm.btn-danger.rounded-circle
 
          {:style {:transform "translateX(-50%)"
                   :left (str @thumb-pos-sub "%")
                   :position :relative
-                  :cursor :pointer
-                  :background-color :white}
+                  :cursor :pointer}
 
           :on-pointer-down #(rs/interpreter-send! controller
                                                   :thumb-pointer-down
-                                                  (BrowserEvent. %))
+                                                  (do (.persist %)
+                                                      %))
 
           :on-pointer-move #(rs/interpreter-send! controller
                                                   :thumb-pointer-move
-                                                  (BrowserEvent. %))
+                                                  (do (.persist %)
+                                                      %))
 
           :on-pointer-up #(rs/interpreter-send!   controller
                                                   :thumb-pointer-up
-                                                  (BrowserEvent. %))}]]
+                                                  (do (.persist %)
+                                                      %))}
+         "⊙"]]
        [:div.gauge-value
         {:style {:text-align :center}}
         (str (.round js/Math @value-sub) "%")]])))
@@ -199,7 +202,7 @@
 
 (defn ^:after-load -main []
   (reagent/render [:div
-                   "Drag & drop the red thumb to change a component value value."
+                   "Drag & drop the red thumb to change a component value."
                    [gauge-component :min 0 :max 100 :val 0]
                    [gauge-component :min 0 :max 100 :val 100]
                    [gauge-component :min 0 :max 100 :val 50]]
