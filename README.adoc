@@ -458,6 +458,7 @@ In the above machine configuration, the `:blinking` activity will start when `:o
 
 The activity implementation should be provided either in machine options under `:activities` section, where each activity should be designated
 by an unique id. Or uring DSL:
+
 - `(def-acitivty-ev)`
 - `(def-acitivty-db)`
 - `(def-acitivty-idb)`
@@ -468,6 +469,8 @@ by an unique id. Or uring DSL:
 
 Activity implementation function should start the activity as it's side effect and return a function which stops the activity started.
 The function returned will be called by the re-state interpreter upon state leave to stop the activity.
+
+Activities might request re-frame co-effects to be injected in co-effects map the same way actions do.
 
 [NOTE]
 ====

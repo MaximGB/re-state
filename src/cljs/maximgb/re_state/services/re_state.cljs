@@ -4,7 +4,6 @@
             [maximgb.re-state.utils :as utils]
             [maximgb.re-state.impl.interpreter :as iimpl]))
 
-
 ;; Interpreter registry
 (def *iregistry (volatile! {}))
 

@@ -81,6 +81,8 @@
 
 
 ;; TODO: refactor to take into account not only actions and activities
+;; NOTE: usage of (aget) here, prevents issues with Closure Advanced optimization
+;;       when (.-prop obj) is used, with code stops working after -O "advanced"
 (defn- machine-actions->interceptors
   "Collects vector of unique action interceptors (#js [action]) -> [].
 
@@ -93,7 +95,7 @@
                        ((fn [^js/Object action]
                           (if-let [exec-fn (.-exec action)]
                             (get interceptors exec-fn)
-                            (if-let [activity (.-activity action)]
+                            (if-let [activity (aget action "activity")]
                               (as-> activity $
                                 (aget $ "type")
                                 (keyword $)

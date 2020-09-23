@@ -66,17 +66,14 @@
           [(if (= blink-state :green)
              :button.btn.btn-success.btn-lg.rounded-circle
              :button.btn.btn-outline-dark.btn-lg.rounded-circle.disabled)
-           {:on-click #(rs/interpreter-send! controller :to-yellow)}
            "G"]
           [(if (= blink-state :yellow)
              :button.btn.btn-warning.btn-lg.rounded-circle
              :button.btn.btn-outline-dark.btn-lg.rounded-circle.disabled)
-           {:on-click #(rs/interpreter-send! controller :to-red)}
            "Y"]
           [(if (= blink-state :red)
              :button.btn.btn-danger.btn-lg.rounded-circle
              :button.btn.btn-outline-dark.btn-lg.rounded-circle.disabled)
-           {:on-click #(rs/interpreter-send! controller :to-green)}
            "R"]]
          [:div.btn-group.mt-2
           [(if (= state :off)
