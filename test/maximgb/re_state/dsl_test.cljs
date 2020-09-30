@@ -2,17 +2,18 @@
   (:require [cljs.test :refer [deftest is testing async use-fixtures]]
             [cljs.core.async :as casync]
             [re-frame.core :as rf]
-            [maximgb.re-state.core :as xs
-                                  :refer [def-machine
-                                          def-action-db
-                                          def-action-fx
-                                          def-action-ctx
-                                          def-guard-db
-                                          def-guard-fx
-                                          def-guard-ctx
-                                          interpreter!
-                                          interpreter-start!
-                                          interpreter-send!]]))
+            [maximgb.re-state.core :as xs :refer [def-machine
+                                                  let-machine
+                                                  let-machine->
+                                                  def-action-db
+                                                  def-action-fx
+                                                  def-action-ctx
+                                                  def-guard-db
+                                                  def-guard-fx
+                                                  def-guard-ctx
+                                                  interpreter!
+                                                  interpreter-start!
+                                                  interpreter-send!]]))
 
 (def rf-checkpoint (volatile! nil))
 
@@ -68,4 +69,38 @@
 
                (is (= (casync/<! c) 3) "All actions have been called.")
 
+               (done))))))
+
+
+(deftest defining-machine-localy-test
+  (testing "Local machine definition"
+    (async done
+
+           (let [c (casync/timeout 100)
+                 m (let-machine local-machine {:id       :local-machine
+                                               :initial  :done
+                                               :states  {:done {:entry :send-done}}}
+                                (def-action-fx local-machine :send-done (fn [cofx]
+                                                                          (casync/put! c :done))))
+                 i (interpreter! m)]
+
+             (casync/go
+               (interpreter-start! i)
+               (is (= (casync/<! c) :done) "Done recieved, machine definition is correct")
+               (done)))))
+
+  (testing "Local machine definition with machine injection"
+    (async done
+
+           (let [c (casync/timeout 100)
+                 m (let-machine-> local-machine {:id       :local-machine
+                                                 :initial  :done
+                                                 :states  {:done {:entry :send-done}}}
+                                  (def-action-fx :send-done (fn [cofx]
+                                                              (casync/put! c :done))))
+                 i (interpreter! m)]
+
+             (casync/go
+               (interpreter-start! i)
+               (is (= (casync/<! c) :done) "Done recieved, machine definition is correct")
                (done))))))

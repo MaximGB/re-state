@@ -8,6 +8,25 @@
   `(def ~var-name (machine! ~config)))
 
 
+(defmacro let-machine
+  "Creates machine with `config`, binds it to a local var `var-name` using `let` form and executes body within `var-name` scope, returns machine defined"
+  [var-name config & body]
+  `(let [~var-name (machine! ~config)]
+     ~@body
+     ~var-name))
+
+
+(defmacro let-machine->
+  "Creates machine with `config`, binds it to a local var `var-name` using `let` form and executes body within `var-name` scope injecting `var-name` as the first argument of each body form, returns machine defined"
+  [var-name config & body]
+  (let [adjusted-body# (map (fn [[first & rest]]
+                              `(~first ~var-name ~@rest))
+                            body)]
+    `(let [~var-name (machine! ~config)]
+       ~@adjusted-body#
+       ~var-name)))
+
+
 (defmacro def-action-db
   "Adds a DB-action with given `id` and handler function `action-fn` plus `interceptors` if needed to the machine defined by `var-name`."
 

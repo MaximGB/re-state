@@ -1,35 +1,60 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
   <modelVersion>4.0.0</modelVersion>
+
   <groupId>maximgb</groupId>
+
   <artifactId>re-state</artifactId>
-  <version>1.2.0</version>
+
+  <version>1.3.0-snapshot</version>
+
   <name>re-state</name>
+
   <description>Re-frame supplimentary library which routes dispatched events via statecharts implementing final state machines.</description>
 
   <scm>
+
     <connection>scm:git:git://github.com/MaximGB/re-state.git</connection>
+
     <developerConnection>scm:git:ssh://git@github.com/MaximGB/re-state.git</developerConnection>
+
     <url>https://github.com/MaximGB/re-state</url>
+
   </scm>
 
   <developers>
+
     <developer>
+
       <id>maximgb</id>
+
       <name>Maxim Bazhenov</name>
+
       <url>https://www.max-bazhenov.com/</url>
+
       <roles>
+
         <role>developer</role>
+
       </roles>
+
       <timezone>Europe/Moscow</timezone>
+
       <properties>
+
         <picUrl>https://github.com/MaximGB.png</picUrl>
+
       </properties>
+
     </developer>
+
   </developers>
 
   <build>
+
     <sourceDirectory>src/cljs</sourceDirectory>
+
   </build>
 
   <dependencies>
@@ -73,11 +98,17 @@
   </repositories>
 
   <licenses>
+
     <license>
+
       <name>MIT</name>
+
       <url>https://raw.githubusercontent.com/MaximGB/re-state/master/LICENSE</url>
+
       <distribution>repo</distribution>
+
     </license>
+
   </licenses>
 
 </project>
