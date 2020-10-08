@@ -93,9 +93,9 @@
     (async done
 
            (let [c (casync/timeout 100)
-                 m (let-machine-> local-machine {:id       :local-machine
-                                                 :initial  :done
-                                                 :states  {:done {:entry :send-done}}}
+                 m (let-machine-> {:id       :local-machine
+                                   :initial  :done
+                                   :states  {:done {:entry :send-done}}}
                                   (def-action-fx :send-done (fn [cofx]
                                                               (casync/put! c :done))))
                  i (interpreter! m)]

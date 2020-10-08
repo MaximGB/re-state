@@ -17,14 +17,15 @@
 
 
 (defmacro let-machine->
-  "Creates machine with `config`, binds it to a local var `var-name` using `let` form and executes body within `var-name` scope injecting `var-name` as the first argument of each body form, returns machine defined"
-  [var-name config & body]
-  (let [adjusted-body# (map (fn [[first & rest]]
-                              `(~first ~var-name ~@rest))
+  "Creates machine with `config`, binds it to a local var using `let` form and executes body within variable scope injecting is as the first argument of each body form, returns machine defined"
+  [config & body]
+  (let [machine-var (gensym 'machine)
+        adjusted-body# (map (fn [[first & rest]]
+                              `(~first ~machine-var ~@rest))
                             body)]
-    `(let [~var-name (machine! ~config)]
+    `(let [~machine-var (machine! ~config)]
        ~@adjusted-body#
-       ~var-name)))
+       ~machine-var)))
 
 
 (defmacro def-action-db
