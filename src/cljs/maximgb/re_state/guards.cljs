@@ -35,11 +35,9 @@
 
   [handler]
   (fn [re-ctx _? js-meta]
-    (let [db-guard-handler (db-guard handler)
-          interpreter (utils/re-ctx->*interpreter re-ctx)
-          interpreter-path (protocols/interpreter->path interpreter)]
+    (let [db-guard-handler (db-guard handler)]
       (utils/call-with-re-ctx-db-isolated re-ctx
-                                          interpreter-path
+                                          (utils/re-ctx->interpreter-isolated-db-path re-ctx)
                                           db-guard-handler
                                           _?
                                           js-meta))))
@@ -66,11 +64,9 @@
 
   [handler]
   (fn [re-ctx _? js-meta]
-    (let [fx-guard-handler (fx-guard handler)
-          interpreter (utils/re-ctx->*interpreter re-ctx)
-          interpreter-path (protocols/interpreter->path interpreter)]
+    (let [fx-guard-handler (fx-guard handler)]
       (utils/call-with-re-ctx-db-isolated re-ctx
-                                          interpreter-path
+                                          (utils/re-ctx->interpreter-isolated-db-path re-ctx)
                                           fx-guard-handler
                                           _?
                                           js-meta))))
@@ -96,11 +92,9 @@
 
   [handler]
   (fn [re-ctx _? js-meta]
-    (let [ctx-guard-handler (ctx-guard handler)
-          interpreter (utils/re-ctx->*interpreter re-ctx)
-          interpreter-path (protocols/interpreter->path interpreter)]
+    (let [ctx-guard-handler (ctx-guard handler)]
       (utils/call-with-re-ctx-db-isolated re-ctx
-                                          interpreter-path
+                                          (utils/re-ctx->interpreter-isolated-db-path re-ctx)
                                           ctx-guard-handler
                                           _?
                                           js-meta))))

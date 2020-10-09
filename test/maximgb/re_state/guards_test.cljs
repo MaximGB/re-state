@@ -13,6 +13,7 @@
                                           idb-guard
                                           ifx-guard
                                           ictx-guard]]
+            [maximgb.re-state.utils :as u]
             [re-frame.core :as rf]))
 
 
@@ -101,7 +102,9 @@
              (rf/reg-event-db
               ::db-guard-test-setup
               (fn [db]
-                (assoc-in db [::a ::b ::can-run?] true)))
+                (assoc-in db
+                          (conj (u/interpreter->isolated-db-path interpreter) ::can-run?)
+                          true)))
 
              (rf/dispatch-sync [::db-guard-test-setup])
 
@@ -163,7 +166,9 @@
              (rf/reg-event-db
               ::db-guard-test-setup
               (fn [db]
-                (assoc-in db [::a ::b ::can-run?] true)))
+                (assoc-in db
+                          (conj (u/interpreter->isolated-db-path interpreter) ::can-run?)
+                          true)))
 
              (rf/dispatch-sync [::db-guard-test-setup])
 
@@ -221,7 +226,9 @@
              (rf/reg-event-db
               ::db-guard-test-setup
               (fn [db]
-                (assoc-in db [::a ::b ::can-run?] true)))
+                (assoc-in db
+                          (conj (u/interpreter->isolated-db-path interpreter) ::can-run?)
+                          true)))
 
              (rf/dispatch-sync [::db-guard-test-setup])
 
