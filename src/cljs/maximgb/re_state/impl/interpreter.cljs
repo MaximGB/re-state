@@ -136,7 +136,7 @@
                  (let [interpreter-state (protocols/interpreter->state interpreter)
                        new-db (assoc-in db
                                         (conj interpreter-path :state)
-                                        (.-value ^js/XState.State interpreter-state))]
+                                        (js->clj (.-value ^js/XState.State interpreter-state) :keywordize-keys true))]
                    (-> re-ctx
                        (rf/assoc-coeffect :db new-db)
                        (rf/assoc-effect :db new-db)))
