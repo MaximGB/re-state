@@ -74,6 +74,26 @@
   (.-afn meta-fn))
 
 
+(defn keywordize-state
+  "Transforms machine state encoded as JS object to a map with all the states keywordized, this might include both keys and values."
+  [js-state]
+  (let [state (js->clj js-state)]
+    (cond
+      (string? state)
+      (keyword state)
+
+      (map? state)
+      (reduce-kv (fn [state jsk jsv]
+                   (assoc state
+                          (keyword (.toString jsk 10))
+                          (keywordize-state jsv)))
+                 {}
+                 state)
+
+      :else
+      state)))
+
+
 ;; TODO: simplify the path
 (def MACHINE-CONFIG-ACTIONS (specter/recursive-path []
                                                     p

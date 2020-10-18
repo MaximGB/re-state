@@ -103,14 +103,14 @@
              (casync/go
                (interpreter-start! i)
                (casync/<! c) ;; waiting for check time
-               (is (= @s {:ready {:ready-one "waiting"
-                                  :ready-two "waiting"}})
+               (is (= @s {:ready {:ready-one :waiting
+                                  :ready-two :waiting}})
                    "Correct interpreter state reported")
                (interpreter-send! i :run )
                (casync/<! c) ;; waiting for check time from one state
                (casync/<! c) ;; waiting for check time from another state
-               (is (= @s {:ready {:ready-one "running"
-                                  :ready-two "running"}})
+               (is (= @s {:ready {:ready-one :running
+                                  :ready-two :running}})
                    "Correct interpreter transition executed")
                (done))))))
 

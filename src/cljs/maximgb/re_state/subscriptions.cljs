@@ -1,6 +1,7 @@
 (ns maximgb.re-state.subscriptions
   (:require [re-frame.core :as rf]
-            [maximgb.re-state.protocols :as protocols]))
+            [maximgb.re-state.protocols :as protocols]
+            [maximgb.re-state.utils :as utils]))
 
 
 (rf/reg-sub
@@ -57,17 +58,8 @@
    (isubscribe-root interpreter))
  (fn [idb [_ _ keywordize?]]
    (let [state (:state idb)]
-     (cond
-       (and (string? state) keywordize?)
-       (keyword state)
-
-       (string? state)
-       state
-
-       keywordize?
-       (js->clj state :keywordize-keys true)
-
-       :else
+     (if keywordize?
+       (utils/keywordize-state state)
        (js->clj state)))))
 
 

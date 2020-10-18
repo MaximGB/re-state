@@ -10,7 +10,8 @@
                                             machine-options->activities-interceptors
                                             js-meta->kv-argv
                                             call-with-re-ctx-db-isolated
-                                            with-re-ctx-db-isolated]]))
+                                            with-re-ctx-db-isolated
+                                            keywordize-state]]))
 
 
 (def test-machine-config {:id :test-2
@@ -153,3 +154,15 @@
              {:a {:b {:c {:v 1}
                       :d {:v 2}}}
               :z 1})))))
+
+
+(deftest keywordize-state-test
+  (testing "XState keywordize convertion utility"
+    (is (= (keywordize-state "a") :a))
+    (is (= (keywordize-state :a) :a))
+    (is (= (keywordize-state 16) 16))
+    (is (= (keywordize-state #js {:a 10}) {:a 10}))
+    (is (= (keywordize-state #js {"a" #js {"b" "c"
+                                           "d" "e"}})
+           {:a {:b :c
+                :d :e}}))))
