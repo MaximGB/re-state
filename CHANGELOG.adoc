@@ -8,6 +8,9 @@ ifdef::env-github[]
 :warning-caption: :warning
 endif::[]
 
+== 1.3.1
+- Interpreter state is now (js->clj) converted with all the keys keywordized
+
 == 1.3.0
 - let-machine and let-machine-> macros are added
 - fixed bug introduced in 1.2.0, guards DB isolation worked incorrectly, it associated entire interpreter data into :db cofx, whereas it should have associated just db part
