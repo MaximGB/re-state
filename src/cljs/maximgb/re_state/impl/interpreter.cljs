@@ -129,13 +129,14 @@
    :before (fn [re-ctx]
              (let [interpreter (utils/re-ctx->*interpreter re-ctx)
                    interpreter-path (protocols/interpreter->path interpreter)
+                   interpreter-id (protocols/interpreter->id interpreter)
                    db (rf/get-coeffect re-ctx :db)
                    idb (get-in db interpreter-path)]
                (if (or (nil? idb) (and (associative? idb) (not (indexed? idb))))
                  ;; If isolated interpreter db part allows associtiation by keyword
                  (let [interpreter-state (protocols/interpreter->state interpreter)
                        new-db (assoc-in db
-                                        (conj interpreter-path :state)
+                                        (conj interpreter-path interpreter-id)
                                         (.-value ^js/XState.State interpreter-state))]
                    (-> re-ctx
                        (rf/assoc-coeffect :db new-db)
@@ -153,7 +154,7 @@
 
 
 (defn- interpreter-
-  [path machine]
+  [path machine id]
   (let [*interpreter (volatile! {:state nil
                                  :started? false})]
     (reify
@@ -162,6 +163,9 @@
       (-deref [this] @*interpreter)
 
       protocols/InterpreterProto
+
+      (interpreter->id [this]
+        id)
 
       (interpreter->path [this]
         path)
@@ -235,8 +239,12 @@
    (interpreter! nil machine))
 
   ([path machine]
-   (let [valid-path (or path (gensym ::instance))]
+   (interpreter! path machine (gensym ::instance)))
+
+  ([path machine id]
+   (let [valid-path (or path id)]
      (interpreter- (if (seqable? valid-path)
                      valid-path
                      [valid-path])
-                   machine))))
+                   machine
+                   id))))

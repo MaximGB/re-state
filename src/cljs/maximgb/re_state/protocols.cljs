@@ -24,6 +24,8 @@
 
 (defprotocol InterpreterProto
   "XState based interpreter protocol which uses re-frame facilities to send/recieve and handle events"
+  (interpreter->id [this]
+    "Returns interpreter id.")
   (interpreter->path [this]
     "Returns interpreter data path in app-db.")
   (interpreter->machine ^Machine [this]

@@ -56,8 +56,8 @@
  :maximgb.re-state.core/sub-interpreter-state
  (fn [[_ interpreter]]
    (isubscribe-root interpreter))
- (fn [idb [_ _ keywordize?]]
-   (let [state (:state idb)]
+ (fn [idb [_ interpreter keywordize?]]
+   (let [state (get idb (protocols/interpreter->id interpreter))]
      (if keywordize?
        (utils/keywordize-state state)
        (js->clj state)))))
