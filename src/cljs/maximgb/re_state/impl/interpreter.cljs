@@ -4,6 +4,7 @@
             [maximgb.re-state.impl.machine :as machine]
             [maximgb.re-state.services.spawn :as spawn]
             [re-frame.core :as rf]
+            [re-frame.fx   :as fx]
             [xstate :as xs]))
 
 
@@ -145,6 +146,21 @@
                  re-ctx)))))
 
 
+;; Re-frame interceptor which unstacks and executes stacked effects, leaving only the last unstacked effect parameter for each effect
+;; present in `re-ctx` such that re-frame's effect execution interceptor has something to do.
+(def effects-unstack-interceptor
+  (rf/->interceptor
+   :id ::effects-unstack-interceptor
+   :after (fn [re-ctx]
+            (let [do-fx-fn (:after fx/do-fx)]
+              (loop [re-ctx-unstacked re-ctx]
+                (if (utils/re-ctx-has-stacked-effects re-ctx-unstacked)
+                  (let [[re-ctx-with-poped-effects re-ctx-with-left-effects] (utils/re-ctx-pop-stacked-effects re-ctx-unstacked)]
+                    (do-fx-fn re-ctx-with-poped-effects)
+                    (recur re-ctx-with-left-effects))
+                  re-ctx-unstacked))))))
+
+
 ;; Re-frame event handler serving as the bridge between re-frame and XState
 (rf/reg-event-ctx
  ::xs-transition-event
@@ -229,7 +245,8 @@
                   :state xs-new-state)
           (rf/enqueue re-ctx (conj interceptors
                                    store-state-interceptor
-                                   actions-exec-interceptor)))))))
+                                   actions-exec-interceptor
+                                   effects-unstack-interceptor)))))))
 
 
 (defn interpreter!
@@ -239,9 +256,9 @@
    (interpreter! nil machine))
 
   ([path machine]
-   (interpreter! path machine (gensym ::instance)))
+   (interpreter! (gensym ::instance) path machine))
 
-  ([path machine id]
+  ([id path machine]
    (let [valid-path (or path id)]
      (interpreter- (if (seqable? valid-path)
                      valid-path

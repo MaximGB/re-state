@@ -246,3 +246,44 @@
                         ;; Restoring back to co-effect because we are in environment with multiple event handlers
                         (rf/assoc-coeffect #_new-ictx :db udb))]
         new-ctx))))
+
+
+(defn re-ctx-has-stacked-effects
+  "Checks if re-frame context has stacked effects."
+  [re-ctx]
+  (some (fn [[effect-key effect-val]]
+          (:maximgb.re-state.core/stacked-effect (meta effect-val)))
+        (rf/get-effect re-ctx)))
+
+
+(defn re-ctx-pop-stacked-effects
+  "Pops out one level of stacked effects out of `re-ctx`. Returns vector with two elements:
+  - `re-ctx` with popped effects only
+  - `re-ctx` with effects left
+  if only one element is left in a stacked effect that it's normalized into normal effect."
+  [re-ctx]
+  (let [effects (rf/get-effect re-ctx)]
+    [(assoc re-ctx :effects (->> effects
+                                 (map (fn [[effect-key effect-value]]
+                                        (if (and (:maximgb.re-state.core/stacked-effect (meta effect-value))
+                                                 (< 1 (count effect-value)))
+                                          [effect-key (first effect-value)])))
+                                 (into {})))
+
+     (assoc re-ctx :effects (->> effects
+                                 (map (fn [[effect-key effect-value :as effect]]
+                                        (let [is-stacked-effect? (:maximgb.re-state.core/stacked-effect (meta effect-value))
+                                              is-single-item-stacked-effect-vector? (and is-stacked-effect?
+                                                                                         (= 1 (count effect-value)))]
+                                          (cond
+                                           (and is-stacked-effect?
+                                                (not is-single-item-stacked-effect-vector?))
+                                           [effect-key (with-meta (subvec effect-value 1)
+                                                                  (meta effect-value))]
+
+                                           is-stacked-effect?
+                                           [effect-key (first effect-value)]
+
+                                           :else
+                                           effect))))
+                                 (into {})))]))

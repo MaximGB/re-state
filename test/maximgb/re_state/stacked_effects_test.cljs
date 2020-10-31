@@ -25,7 +25,12 @@
     (async done
 
            (rf/reg-fx
-            :apply
+            :apply-stacked
+            (fn [[fn & args]]
+              (apply fn args)))
+
+           (rf/reg-fx
+            :apply-unstacked
             (fn [[fn & args]]
               (apply fn args)))
 
@@ -33,20 +38,26 @@
 
                  i (interpreter! (let-machine-> {:id       :test-machine
                                                  :initial  :ready
-                                                 :states  {:ready {:entry [:action-1 :action-2]}}}
+                                                 :states  {:ready {:entry [:action-0 :action-1 :action-2]}}}
+
+                                   (def-action-fx
+                                     :action-0
+                                     (fn []
+                                       {:apply-unstacked [async/put! c :action-0]}))
 
                                    (def-action-fx
                                      :action-1
                                      (fn []
-                                       {:apply [async/put! c :action-1]}))
+                                       {:apply-stacked   [async/put! c :action-1]}))
 
                                    (def-action-fx
                                      :action-2
                                      (fn []
-                                       {:apply [async/put! c :action-2]}))))]
+                                       {:apply-stacked [async/put! c :action-2]}))))]
 
              (async/go
                (interpreter-start! i)
                (is (= (async/<! c) :action-1))
+               (is (= (async/<! c) :action-0))
                (is (= (async/<! c) :action-2))
                (done))))))

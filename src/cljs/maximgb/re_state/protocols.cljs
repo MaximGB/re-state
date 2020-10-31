@@ -28,6 +28,8 @@
     "Returns interpreter id.")
   (interpreter->path [this]
     "Returns interpreter data path in app-db.")
+  (interpreter->options [this]
+    "Returns interpreter configuration options.")
   (interpreter->machine ^Machine [this]
     "Returns currently interpreting machine.")
   (interpreter->state ^Object  [this]

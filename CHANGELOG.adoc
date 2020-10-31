@@ -8,6 +8,8 @@ ifdef::env-github[]
 :warning-caption: :warning
 endif::[]
 
+== 1.5.0
+- Added support of so called "stacked" effects. Before if during one transition two or more actions issued the same effect (effect with the same key) only the last one would be executed. Now all of them will be executed. The order of execution should be considered to be undetermined for now.
 == 1.4.0
 - Added ability for multiple interpreters to share the same isolated re-frame db part.
 

@@ -79,7 +79,19 @@
           ((fn [re-ctx]
              (if (map? new-effects)
                (reduce (fn [re-ctx [effect-key effect-val]]
-                         (rf/assoc-effect re-ctx effect-key effect-val))
+                         (let [old-effect (rf/get-effect re-ctx effect-key)]
+                           (cond
+                             (= effect-key :db) ;; :db effect doesn't stack since it's handled in a special way later in the function
+                             (rf/assoc-effect re-ctx effect-key effect-val)
+
+                             (:maximgb.re-state.core/stacked-effect (meta old-effect))
+                             (rf/assoc-effect re-ctx effect-key (conj old-effect effect-val))
+
+                             old-effect
+                             (rf/assoc-effect re-ctx effect-key ^:maximgb.re-state.core/stacked-effect [old-effect effect-val])
+
+                             :else
+                             (rf/assoc-effect re-ctx effect-key effect-val))))
                        re-ctx
                        new-effects)
                re-ctx)))
